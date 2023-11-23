@@ -12,10 +12,6 @@ void BLESetup() {
   Serial.println("<Arduino ready>");
 }
 
-void HandleData(){
-    recvData();
-    printNewData();
-}
 
 void recvData(){
   static byte ndx = 0;
@@ -46,6 +42,13 @@ void printNewData(){
     Serial.println(receivedChars);
     newData = false;
   }
+}
+
+
+
+void HandleData(){
+    recvData();
+    printNewData();
 }
 
 #endif // GENERAL_H

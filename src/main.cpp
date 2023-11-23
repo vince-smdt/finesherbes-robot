@@ -22,7 +22,8 @@ void setup()
 
 void loop()
 {
-  suivreLigne();
+  HandleData();
+  // suivreLigne();
 }
 
 
