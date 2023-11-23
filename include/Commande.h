@@ -1,6 +1,8 @@
-int getTable();
-int getPlat();
-void pickCommande();
+#ifndef GENERAL_H
+#define GENERAL_H
+
+#include <LibRobus.h>
+#include <stdint.h>
 
 
 
@@ -17,3 +19,9 @@ int getPlat(){
 void pickCommande(){
     //ramasse la commande désiré
 }
+
+
+
+
+
+#endif // GENERAL_H
