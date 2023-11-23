@@ -4,6 +4,7 @@
 #include <bras.h>
 #include "General.h"
 #include "SuiveurLigne.h"
+#include "BLEFinesHerbes.h"
 
 // Defines
 #define LEFT 0
@@ -13,8 +14,9 @@
 void setup()
 {
   BoardInit();
-  Serial.begin(9600);
+  Serial.begin(115200);
   calibrationSuiveurLigne();
+  BLESetup();
 }
 
 
