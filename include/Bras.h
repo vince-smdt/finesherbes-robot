@@ -1,5 +1,6 @@
-#include  <LibRobus.h>
+#include <LibRobus.h>
 #include <stdint.h>
+
 void plateau(){
   SERVO_Enable(1);
   int position;
