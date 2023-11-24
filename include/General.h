@@ -13,6 +13,11 @@ float IR_to_cm(uint8_t id) {
   return constrain(5500.0/ROBUS_ReadIR(id), IR_DIST_MIN, IR_DIST_MAX);
 }
 
+// Fait avancer le robot avec l'ajustement PID et ajuste les coefficients de correction
+void avancer(float vitesseG, float vitesseD) {
+  MOTOR_SetSpeed(LEFT, vitesseG);
+  MOTOR_SetSpeed(RIGHT, vitesseD);
+}
 
 
 #endif // GENERAL_H
