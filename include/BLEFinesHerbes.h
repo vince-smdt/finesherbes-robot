@@ -13,8 +13,8 @@ void BLESetup() {
 }
 
 void HandleData(){
-    recvData();
-    printNewData();
+  // recvData();
+  // printNewData();
 }
 
 void recvData(){
@@ -41,11 +41,11 @@ void recvData(){
 }
 
 void printNewData(){
-  if ( newData == true) {
+  if (newData == true) {
     Serial.print("Received: ");
     Serial.println(receivedChars);
     newData = false;
   }
 }
 
-#endif // GENERAL_H
+#endif // BLE_H

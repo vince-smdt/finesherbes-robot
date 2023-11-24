@@ -94,4 +94,4 @@ void suivreLigne()
 }
 
 
-#endif // GENERAL_H
+#endif // SUIVEURLIGNE_H
