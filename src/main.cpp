@@ -1,6 +1,7 @@
 #include <QTRSensors.h>
 #include <Arduino.h>
 #include <LibRobus.h>
+#include "DetectMicroSonore.h"
 
 // Defines
 #define LEFT 0
@@ -22,7 +23,7 @@ const int OBJECTIF = 3500;
 const float kP = 0.0001;
 const float kD = 0.0002;
 float derniereErreur = 0;
-
+/*
 void calibrationSuiveurLigne()
 {
   pinMode(13, OUTPUT);
@@ -48,7 +49,7 @@ void calibrationSuiveurLigne()
     Serial.print(qtra.calibratedMaximumOn[i]);
     Serial.print(' ');
   }
-}
+}*/
 
 // Fait avancer le robot avec l'ajustement PID et ajuste les coefficients de correction
 void avancer(float vitesseG, float vitesseD) {
@@ -59,15 +60,26 @@ void avancer(float vitesseG, float vitesseD) {
 
 void setup()
 {
+   
   BoardInit();
   Serial.begin(9600);
-  calibrationSuiveurLigne();
+ // calibrationSuiveurLigne();
+  MicroSonoreSetup();
 }
 
 
 void loop()
 {
-  //calcul la position de la ligne (entre 0 et 7000) selon les lectures des capteurs
+  
+  
+
+  if (MicroSonoreRobot() < 5){
+      Serial.println("stop!");
+      MOTOR_SetSpeed(RIGHT, 0);
+      MOTOR_SetSpeed(LEFT, 0);
+  }
+  else avancer(0.1, 0.1);
+  /*//calcul la position de la ligne (entre 0 et 7000) selon les lectures des capteurs
   unsigned int position = qtra.readLine(valeursCapteur);
   Serial.print("Position : ");
   Serial.print(position);
@@ -95,7 +107,7 @@ void loop()
   Serial.print(vitesseD);
   Serial.print("\n");
 
-  avancer(vitesseG, vitesseD);
+  avancer(vitesseG, vitesseD);*/
 }
 
 
