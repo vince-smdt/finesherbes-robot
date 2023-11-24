@@ -41,4 +41,27 @@ void deposer_plateau()
   delay (1500);
 }
 
+// Code à Imad, on pourrait utiliser les for loops dans sa fonction plateau pour gérer programmatiquement la vitesse des servos,
+// indépendamment de la résistante sur l'Arduino X
+
+// void plateau(){
+//   SERVO_Enable(1);
+//   int position;
+//   SERVO_SetAngle(1, 50);
+//   if( (MOTOR_SetSpeed(0, 0) || MOTOR_SetSpeed(1, 0)) ){
+//       for (position = 100; position <= 50; position -= 1){
+//         SERVO_SetAngle(1, position);
+//         delay(1);
+//       }
+//       delay(200);
+//     }
+//     else () {
+//         for (position = 50; position <= 100; position += 1){
+//             SERVO_SetAngle(1, position);
+//             delay(1);
+//         }
+//         delay(200);
+//     }
+// }
+
 #endif // BRAS_H
