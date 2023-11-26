@@ -9,9 +9,15 @@
 #define NB_LECTURES          4  //Calcul la moyenne de 4 lectures d'un capteur pour normaliser la valeur
 #define EMITTER_PIN          QTR_NO_EMITTER_PIN  //Pas d'emetteur
 
+#define VERS_LA_BASE         0
+#define VERS_LES_TABLES      1
+
+int numRangee = 0;
+int etat = VERS_LES_TABLES;
+
 //initialise tous les capteurs dans le arduino
 QTRSensorsAnalog qtra((unsigned char[]) {A6, A5, A4, A3, A2, A1}, NB_CAPTEURS, NB_LECTURES, EMITTER_PIN);
-QTRSensorsAnalog exSensors((unsigned char[]) {A0, A7}, 2, NB_LECTURES, EMITTER_PIN);
+QTRSensorsAnalog exSensors((unsigned char[]) {A0, A7}, CAPTEURS_EXTREMITE, NB_LECTURES, EMITTER_PIN);
 unsigned int valeursCapteur[NB_CAPTEURS];
 unsigned int valeursCapteurExtremite[CAPTEURS_EXTREMITE];
 
@@ -55,10 +61,30 @@ void suivreLigne()
 {
   //calcul la position de la ligne (entre 0 et 5000) selon les lectures des capteurs
   unsigned int position = qtra.readLine(valeursCapteur);
-  unsigned int extremite = exSensors.readLine(valeursCapteurExtremite);
+  exSensors.read(valeursCapteurExtremite);
   //Serial.print("Position : ");
   //Serial.print(position);
   
+  if (exSensors.numSensorsHigh(valeursCapteurExtremite) == 2)
+  {
+    switch (etat)
+    {
+    case VERS_LA_BASE:
+        numRangee--;
+        break;
+    
+    case VERS_LES_TABLES:
+        numRangee++;
+        break;
+
+    default:
+        break;
+    }
+    
+  }
+  
+
+
   //calcul la différence entre le milieu des capteurs et la ligne
   int erreur = OBJECTIF - position;
   //Serial.print("\tErreur : ");
