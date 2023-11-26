@@ -1,5 +1,5 @@
-#ifndef GENERAL_H
-#define GENERAL_H
+#ifndef SONORE_H
+#define SONORE_H
 #include <Arduino.h>
 #include <LibRobus.h>
 
@@ -16,7 +16,7 @@ void MicroSonoreSetup(){
     pinMode(echoPin, INPUT);
 }
 
-void MicroSonoreTest(){
+void MicroSonoreTest(){// Test
     digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
 
@@ -33,9 +33,7 @@ void MicroSonoreTest(){
     
 }
 
-int MicroSonoreRobot(){
-  //MOTOR_SetSpeed(RIGHT, 0.2);
-  //MOTOR_SetSpeed(LEFT, 0.2);
+int MicroSonoreRobot(){//Fonction arret proche table
 
     digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
@@ -46,12 +44,13 @@ int MicroSonoreRobot(){
     digitalWrite(trigPin, LOW);
 
     duration = pulseIn(echoPin, HIGH, 1000000UL);
-    distance = duration * 0.034 / 2;
+    distance = duration * 0.034 / 2; // Convertion en Cm
 
     Serial.println("Distance :" + String(distance));
 
-    return distance;
+    return distance; 
 }
+
 //AVEC LCD
 /*
 #include <LiquidCrystal.h>
