@@ -21,27 +21,31 @@ void setup()
 
 void loop()
 {
-  Serial.print("VERIF ASYNC"); // Pour s'assurer qu'aucune fonction n'est bloquante
+  Serial.println("VERIF NON-BLOQUANT"); // Pour s'assurer qu'aucune fonction n'est bloquante
 
+  // On execute la fonction voulue en fonction de l'etat actuel
   switch (g_etat) {
     // Etats initiaux
-    case DEPART:
+    case DEPART: {
       g_etat = PRET_DEPOSER_PLATEAU;
       break;
+    }
 
     // Lever le plateau
     case PRET_DEPOSER_PLATEAU:
     case DEPOSER_PLATEAU:
-    case FINI_DEPOSER_PLATEAU:
+    case FINI_DEPOSER_PLATEAU: {
       deposer_plateau();
       break;
+    }
 
     // Deposer le plateau
     case PRET_LEVER_PLATEAU:
     case LEVER_PLATEAU:
-    case FINI_LEVER_PLATEAU:
+    case FINI_LEVER_PLATEAU: {
       lever_plateau();
       break;
+    }
   }
 }
 

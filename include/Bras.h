@@ -25,21 +25,23 @@ void setup_plateau()
 void lever_plateau()
 {
   switch (g_etat) {
-    case PRET_LEVER_PLATEAU:
-    { 
+    // Initiation de la rotation du servo
+    case PRET_LEVER_PLATEAU: {
       g_duree_mouvement_bras = millis();
       SERVO_SetAngle(SERVO_BRAS_ID, ANGLE_SERVO_LEVER);
       g_etat = LEVER_PLATEAU;
       break;
     }
-    case LEVER_PLATEAU:
-    {
+
+    // Attente de la fin de la rotation du servo
+    case LEVER_PLATEAU: {
       if ((millis() - g_duree_mouvement_bras) > DELAI_SERVO_BRAS)
         g_etat = FINI_LEVER_PLATEAU;
       break;
     }
-    case FINI_LEVER_PLATEAU:
-    {
+
+    // On specifie le nouvel etat du robot
+    case FINI_LEVER_PLATEAU: {
       g_etat = PRET_DEPOSER_PLATEAU;
       break; 
     }
@@ -49,23 +51,25 @@ void lever_plateau()
 void deposer_plateau()
 {
   switch (g_etat) {
-    case PRET_DEPOSER_PLATEAU:
-    { 
+    // Initiation de la rotation du servo
+    case PRET_DEPOSER_PLATEAU: {
       g_duree_mouvement_bras = millis();
       SERVO_SetAngle(SERVO_BRAS_ID, ANGLE_SERVO_DEPOSER);
       g_etat = DEPOSER_PLATEAU;
       break;
     }
-    case DEPOSER_PLATEAU:
-    {
+
+    // Attente de la fin de la rotation du servo
+    case DEPOSER_PLATEAU: {
       if ((millis() - g_duree_mouvement_bras) > DELAI_SERVO_BRAS)
         g_etat = FINI_DEPOSER_PLATEAU;
       break;
     }
-    case FINI_DEPOSER_PLATEAU:
-    {
+
+    // On specifie le nouvel etat du robot
+    case FINI_DEPOSER_PLATEAU: {
       g_etat = PRET_LEVER_PLATEAU;
-      break; 
+      break;
     }
   }
 }
