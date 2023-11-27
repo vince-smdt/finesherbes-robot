@@ -11,12 +11,14 @@ void setup()
   Serial.begin(115200);
   calibrationSuiveurLigne();
   BLESetup();
+  setup_plateau();
 }
 
 
 void loop()
 {
-  suivreLigne();
+  // suivreLigne();
+  test_plateau();
 }
 
 
