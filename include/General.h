@@ -13,6 +13,11 @@ const uint8_t IR_DIST_MAX = 80;
 const int PULSES_TOURNER_90_DEG = 1940;
 const float VITESSE_TOURNER = 0.2;
 
+float IR_to_cm(uint8_t id);
+void avancer(float vitesseG, float vitesseD);
+void tourner90(int sens);
+uint32_t temps_ecoule(uint32_t debut);
+
 // Converti la valeur analogue d'un capteur infrarouge en cm
 // Le param "id" represente IR0 a IR3 (0-3)
 float IR_to_cm(uint8_t id) {
@@ -20,7 +25,7 @@ float IR_to_cm(uint8_t id) {
 }
 
 // Fait avancer le robot
-void avancer(float vitesseG, float vitesseD) 
+void avancer(float vitesseG, float vitesseD)
 {
   MOTOR_SetSpeed(LEFT, vitesseG);
   MOTOR_SetSpeed(RIGHT, vitesseD);
@@ -41,6 +46,11 @@ void tourner90(int sens)
   }
   
 
+}
+
+// Retourne le temps ecoule depsuis le temps specifie en param
+uint32_t temps_ecoule(uint32_t debut) {
+  return millis() - debut;
 }
 
 
