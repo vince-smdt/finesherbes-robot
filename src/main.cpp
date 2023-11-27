@@ -14,13 +14,22 @@ void setup()
 {
   BoardInit();
   Serial.begin(9600);
-  calibrationSuiveurLigne();
+ // calibrationSuiveurLigne();
   // BLESetup();
   setup_plateau();
+  MicroSonoreSetup();
 }
 
 void loop()
 {
+  if(MicroSonoreRobot() <= 3){
+    avancer(0,0);
+  }
+  else{
+    avancer(0.1, 0.1);
+  }
+
+  /*
   Serial.println("VERIF NON-BLOQUANT"); // Pour s'assurer qu'aucune fonction n'est bloquante
 
   // On execute la fonction voulue en fonction de l'etat actuel
@@ -46,7 +55,7 @@ void loop()
       lever_plateau();
       break;
     }
-  }
+  }*/
 }
 
 
