@@ -52,6 +52,7 @@ int MicroSonoreRobot(){
 
     return distanceMur;
 }
+
 //AVEC LCD
 /*
 #include <LiquidCrystal.h>
@@ -88,4 +89,4 @@ void loop(){
     lcd.print(distanceInch);
     delay(10);
     lcd.print(" inch");*/
-    #endif //DetectMicroSonore_H
+    #endif
