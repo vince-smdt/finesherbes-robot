@@ -91,7 +91,7 @@ void suivreLigne()
             avancer(0, 0);
             delay(1000);
             //met le cabaret sur la table
-            retourBase();
+            // retourBase();
         }
 
     }
