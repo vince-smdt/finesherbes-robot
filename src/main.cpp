@@ -4,20 +4,23 @@
 #include "General.h"
 #include "SuiveurLigne.h"
 #include "DetectMicroSonore.h"
+#include "Commande.h"
 
 void setup()
 {
-   
   BoardInit();
   Serial.begin(9600);
   calibrationSuiveurLigne();
-  
+  // BLESetup();
+  setup_plateau();
 }
 
 
 void loop()
 {
- test_plateau();
+  // suivreLigne();
+  test_plateau();
+  // livraison();
 }
 
 
