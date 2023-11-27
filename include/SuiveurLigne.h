@@ -91,10 +91,7 @@ void suivreLigne()
             avancer(0, 0);
             delay(1000);
             //met le cabaret sur la table
-            arriveTable = false;
-            tourner90(GAUCHE);
-            tourner90(GAUCHE);
-            etat = VERS_LA_BASE;
+            retourBase();
         }
 
     }

@@ -5,9 +5,16 @@
 #include <stdint.h>
 #include "SuiveurLigne.h"
 
-int getTable() 
+int table;
+int rangee;
+int cote;
+
+int periode = 250;
+unsigned long tempsLigne = 0;
+
+void setTable() 
 {
-  return 1;
+  table = 1;
 }
 
 int getPlat()
@@ -23,9 +30,8 @@ void pickCommande()
 
 void livraison()
 {
-    int table = getTable();
-    int rangee = 1;//(int)((table/2)+0.5);
-    int cote = table%2;
+    rangee = round(table/2);
+    cote = table%2;
     
     Serial.print("rangee : ");
     Serial.print(rangee);
@@ -38,7 +44,17 @@ void livraison()
     {
         suivreLigne();
     }
-    delay(250);
+    
+
+    if(millis() >= tempsLigne + periode){
+        
+        Serial.println("Hello");
+    }
+    
+    tempsLigne += periode;
+    
+
+
     avancer(0, 0);
     delay(500);
     tourner90(cote);
@@ -54,6 +70,14 @@ void livraison()
     
 }
 
-void retourBase();
+void retourBase()
+{
+    arriveTable = false;
+    tourner90(GAUCHE);
+    tourner90(GAUCHE);
+    etat = VERS_LA_BASE;
+    
+}
+
 
 #endif // COMMANDE_H
