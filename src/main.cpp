@@ -3,14 +3,14 @@
 #include "bras.h"
 #include "General.h"
 #include "SuiveurLigne.h"
-#include "BLEFinesHerbes.h"
+#include "DetectMicroSonore.h"
 
 void setup()
 {
   BoardInit();
-  Serial.begin(115200);
+  Serial.begin(9600);
   calibrationSuiveurLigne();
-  BLESetup();
+  // BLESetup();
   setup_plateau();
 }
 

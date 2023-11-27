@@ -5,7 +5,7 @@
 #include <general.h>
 
 const uint8_t SERVO_BRAS_ID = 0;
-const uint8_t ANGLE_SERVO_DEPOSER = 130;
+const uint8_t ANGLE_SERVO_DEPOSER = 120;
 const uint8_t ANGLE_SERVO_LEVER = 180;
 const uint16_t DELAI_SERVO_BRAS = 1500;
 const uint16_t DELAI_DEPOSER_PLATEAU = 5;
