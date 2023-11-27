@@ -4,6 +4,7 @@
 #include "General.h"
 #include "SuiveurLigne.h"
 #include "DetectMicroSonore.h"
+#include "Commande.h"
 
 void setup()
 {
@@ -17,7 +18,7 @@ void setup()
 
 void loop()
 {
- test_plateau();
+  livraison();
 }
 
 

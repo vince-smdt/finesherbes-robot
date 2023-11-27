@@ -2,28 +2,30 @@
 #define SUIVEURLIGNE_H
 
 #include <QTRSensors.h>
-#include <General.h>
+#include "General.h"
+#include "DetectMicroSonore.h"
 
-#define CAPTEURS_EXTREMITE   2
-#define NB_CAPTEURS          6
-#define NB_LECTURES          4  //Calcul la moyenne de 4 lectures d'un capteur pour normaliser la valeur
-#define EMITTER_PIN          QTR_NO_EMITTER_PIN  //Pas d'emetteur
+#define NB_CAPTEURS         8
+#define NB_LECTURES         4  //Calcul la moyenne de 4 lectures d'un capteur pour normaliser la valeur
+#define EMITTER_PIN         QTR_NO_EMITTER_PIN  //Pas d'emetteur
 
-#define VERS_LA_BASE         0
-#define VERS_LES_TABLES      1
+#define VERS_LA_BASE        0
+#define VERS_LES_TABLES     1
+
+#define GAUCHE              1
+#define DROITE              0
 
 int numRangee = 0;
 int etat = VERS_LES_TABLES;
+bool arriveTable = false;
 
 //initialise tous les capteurs dans le arduino
-QTRSensorsAnalog qtra((unsigned char[]) {A6, A5, A4, A3, A2, A1}, NB_CAPTEURS, NB_LECTURES, EMITTER_PIN);
-QTRSensorsAnalog exSensors((unsigned char[]) {A0, A7}, CAPTEURS_EXTREMITE, NB_LECTURES, EMITTER_PIN);
+QTRSensorsAnalog qtra((unsigned char[]) {A7, A6, A5, A4, A3, A2, A1, A0}, NB_CAPTEURS, NB_LECTURES, EMITTER_PIN);
 unsigned int valeursCapteur[NB_CAPTEURS];
-unsigned int valeursCapteurExtremite[CAPTEURS_EXTREMITE];
 
 
 //Constante et propriété du PID
-const int OBJECTIF = 2500;
+const int OBJECTIF = 3500;
 #define VITESSE_MAX  0.3
 
 const float kP = 0.0001;
@@ -37,7 +39,6 @@ void calibrationSuiveurLigne()
   for (int i = 0; i < 150; i++)  //calibration des capteurs
   {
     qtra.calibrate(); 
-    exSensors.calibrate();
   }
   digitalWrite(13, LOW);     //éteint la lumière, la calibration est finie
 
@@ -59,31 +60,46 @@ void calibrationSuiveurLigne()
 
 void suivreLigne()
 {
-  //calcul la position de la ligne (entre 0 et 5000) selon les lectures des capteurs
+  //calcul la position de la ligne (entre 0 et 7000) selon les lectures des capteurs
   unsigned int position = qtra.readLine(valeursCapteur);
-  exSensors.read(valeursCapteurExtremite);
   //Serial.print("Position : ");
   //Serial.print(position);
   
-  if (exSensors.numSensorsHigh(valeursCapteurExtremite) == 2)
-  {
-    switch (etat)
+  //lorsqu'au moins 6 capteurs détectent une ligne, cela veut dire qu'il a atteint une ligne perpendiculaire
+    if (qtra.numSensorsHigh(valeursCapteur) > 6)
     {
-    case VERS_LA_BASE:
-        numRangee--;
-        break;
-    
-    case VERS_LES_TABLES:
-        numRangee++;
-        break;
+        if (arriveTable == false)
+        {
+            switch (etat)
+            {
+            case VERS_LA_BASE:
+                numRangee--;
+                break;
 
-    default:
-        break;
+            case VERS_LES_TABLES:
+                numRangee++;
+                break;
+
+            default:
+                break;
+            }
+        }
+        
+        
+        else
+        {
+            avancer(0, 0);
+            delay(1000);
+            //met le cabaret sur la table
+            arriveTable = false;
+            tourner90(GAUCHE);
+            tourner90(GAUCHE);
+            etat = VERS_LA_BASE;
+        }
+
     }
-    
-  }
   
-
+  
 
   //calcul la différence entre le milieu des capteurs et la ligne
   int erreur = OBJECTIF - position;
@@ -101,14 +117,21 @@ void suivreLigne()
 
   float vitesseG = constrain(VITESSE_MAX + ajustement, 0 , VITESSE_MAX);
   float vitesseD = constrain(VITESSE_MAX - ajustement, 0 , VITESSE_MAX);
-
+  avancer(vitesseG, vitesseD);
   //Serial.print("Vitesse Gauche : ");
   //Serial.print(vitesseG);
   //Serial.print("\tVitesse Droite : ");
   //Serial.print(vitesseD);
   //Serial.print("\n");
+  
+  //Tant qu'il y a un objet à moins de 15cm du sonor, il ne bouge plus
+  /*while (distanceMur < 15)
+  {
+    avancer(0, 0);
+  }
+*/
 
-  avancer(vitesseG, vitesseD);
+ 
   for (unsigned char i = 0; i < NB_CAPTEURS; i++)
   {
     Serial.print(valeursCapteur[i]);
