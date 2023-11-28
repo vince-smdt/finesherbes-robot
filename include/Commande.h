@@ -36,6 +36,7 @@ void livraison()
       setTable();
       rangeeCible = round(table/2.0);
       cote = table%2;
+      positionCible = VERS_LES_TABLES;
 
       Serial.println("SUIVRE_LIGNE_VERS_RANGEE");
       g_etat = SUIVRE_LIGNE_VERS_RANGEE;
@@ -44,23 +45,16 @@ void livraison()
 
     case SUIVRE_LIGNE_VERS_RANGEE: {
       suivreLigne();
-      if (rangeeActuelle == rangeeCible) {
-        Serial.print("Actuel: ");
-        Serial.print(rangeeActuelle);
-        Serial.print("\t");
-        Serial.print("Cible: ");
-        Serial.println(rangeeCible);
-        Serial.println("TOURNER_VERS_TABLE_CLIENT");
+      if (rangeeActuelle == rangeeCible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
+        commencerTourner(cote, 90);
         g_etat = TOURNER_VERS_TABLE_CLIENT;
       }
       break;
     }
 
     case TOURNER_VERS_TABLE_CLIENT: {
-      // Serial.println("Tourner 90 dans livraison");
-
-      if (!tourner(cote, 90)) {
-        arriveTable = true; // On n'ajoute pas au compte de rangée lorsqu'on rencontre un bout de tape car on est déjà sur la bonne rangée
+      if (finiTourner()) {
+        g_bonne_rangee = true;
         Serial.println("SUIVRE_LIGNE_VERS_TABLE");
         g_etat = SUIVRE_LIGNE_VERS_TABLE;
       }
@@ -69,13 +63,56 @@ void livraison()
 
     case SUIVRE_LIGNE_VERS_TABLE: {
       suivreLigne();
-      if (!arriveTable) {
-        Serial.println("LOOP - INITIER_COMMANDE");
-        g_etat = INITIER_COMMANDE;
+      if (g_devant_table) {
+        commencerTourner(!cote, 180);
+        Serial.println("TOURNER_VERS_LIGNE_CENTRALE");
+        positionCible = VERS_LA_BASE;
+        g_etat = TOURNER_VERS_LIGNE_CENTRALE;
       }
+      break;
     }
   }
+}
 
+void retourBase() {
+  switch (g_etat) {
+    case TOURNER_VERS_LIGNE_CENTRALE: {
+      if (finiTourner()) {
+        Serial.println("SUIVRE_LIGNE_VERS_TABLE");
+        g_etat = SUIVRE_LIGNE_VERS_LIGNE_CENTRALE;
+      }
+      break;
+    }
+
+    case SUIVRE_LIGNE_VERS_LIGNE_CENTRALE: {
+      suivreLigne();
+      if (!g_devant_table) {
+        commencerTourner(!cote, 90);
+        Serial.println("TOURNER_VERS_CUISINE");
+        g_etat = TOURNER_VERS_CUISINE;
+      }
+      break;
+    }
+
+    case TOURNER_VERS_CUISINE: {
+      if (finiTourner()) {
+        g_bonne_rangee = false;
+        Serial.println("SUIVRE_LIGNE_VERS_CUISINE");
+        g_etat = SUIVRE_LIGNE_VERS_CUISINE;
+      }
+      break;
+    }
+
+    case SUIVRE_LIGNE_VERS_CUISINE: {
+      suivreLigne();
+      if (rangeeActuelle == rangeeCible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
+        arret();
+        debug_beep(5, 25);
+        delay(5000);
+      }
+      break;
+    }
+  }
 }
 
 #endif // COMMANDE_H
