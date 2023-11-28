@@ -15,6 +15,7 @@ int currentYellow = 45;
 void StartYellow(unsigned long current_Millis);
 void StartGreen();
 void StartRed();
+void ResetRedGreen();
 
 void LumieresSetup(){
     pinMode(43, OUTPUT);
