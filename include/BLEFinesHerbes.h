@@ -55,8 +55,9 @@ void printNewData(){
     Serial.print("Received: ");
     if(sizeof(receivedChars)/sizeof(receivedChars[0]) == 3){
       Commande nouvelle_Commande;
-      nouvelle_Commande.NumTable = receivedChars[1];
-      nouvelle_Commande.NumPlat = receivedChars[2];
+
+      nouvelle_Commande.NumTable = receivedChars[0];
+      nouvelle_Commande.NumPlat = receivedChars[1];
       liste_Commandes.push(nouvelle_Commande);
     }
     newData = false;
