@@ -19,12 +19,12 @@ void setup()
   // BLESetup();
   // setup_plateau();
   // MicroSonoreSetup();
-  // LumieresSetup();
+  LumieresSetup();
 }
 
 void loop()
 {
-  // LumieresLoop();
+  LumieresLoop();
   // livraison();
 
   // if(MicroSonoreRobot() <= 3){
