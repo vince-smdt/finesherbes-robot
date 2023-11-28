@@ -3,23 +3,13 @@
 
 #include <LibRobus.h>
 
-const uint8_t IR_DIST_MIN = 10;
-const uint8_t IR_DIST_MAX = 80;
-
 // Pour faire tourner le robot
-const int PULSES_TOURNER_90_DEG = 1940;
+const uint16_t PULSES_TOURNER_90_DEG = 1940;
 const float VITESSE_TOURNER = 0.2;
 
-float IR_to_cm(uint8_t id);
 void avancer(float vitesseG, float vitesseD);
-void tourner90(int sens);
+void tourner(uint8_t sens, uint16_t angle);
 uint32_t temps_ecoule(uint32_t debut);
-
-// Converti la valeur analogue d'un capteur infrarouge en cm
-// Le param "id" represente IR0 a IR3 (0-3)
-float IR_to_cm(uint8_t id) {
-  return constrain(5500.0/ROBUS_ReadIR(id), IR_DIST_MIN, IR_DIST_MAX);
-}
 
 // Fait avancer le robot
 void avancer(float vitesseG, float vitesseD)
@@ -28,17 +18,19 @@ void avancer(float vitesseG, float vitesseD)
   MOTOR_SetSpeed(RIGHT, vitesseD);
 }
 
-void tourner90(int sens)
+void tourner(uint8_t sens, uint16_t angle)
 {
-  ENCODER_Reset(0);
-  ENCODER_Reset(1);
+  const int32_t PULSES_A_TOURNER = PULSES_TOURNER_90_DEG * (angle/90.0);
 
-  while (ENCODER_Read(0) < PULSES_TOURNER_90_DEG && ENCODER_Read(1) < PULSES_TOURNER_90_DEG)
+  ENCODER_Reset(LEFT);
+  ENCODER_Reset(RIGHT);
+
+  while (ENCODER_Read(LEFT) < PULSES_A_TOURNER && ENCODER_Read(RIGHT) < PULSES_A_TOURNER)
   {
-    (sens == RIGHT) ? avancer(VITESSE_TOURNER, -1*VITESSE_TOURNER) : avancer(-1*VITESSE_TOURNER, VITESSE_TOURNER);
-    Serial.print(ENCODER_Read(0));
+    (sens == RIGHT) ? avancer(VITESSE_TOURNER, -VITESSE_TOURNER) : avancer(-VITESSE_TOURNER, VITESSE_TOURNER);
+    Serial.print(ENCODER_Read(LEFT));
     Serial.print("\t");
-    Serial.print(ENCODER_Read(1));
+    Serial.print(ENCODER_Read(RIGHT));
     Serial.print("\n");
   }
 }

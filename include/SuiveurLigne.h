@@ -5,15 +5,15 @@
 #include "General.h"
 #include "DetectMicroSonore.h"
 
-#define NB_CAPTEURS         8
-#define NB_LECTURES         4  //Calcul la moyenne de 4 lectures d'un capteur pour normaliser la valeur
-#define EMITTER_PIN         QTR_NO_EMITTER_PIN  //Pas d'emetteur
+const uint8_t NB_CAPTEURS = 8;
+const uint8_t NB_LECTURES = 4; //Calcul la moyenne de 4 lectures d'un capteur pour normaliser la valeur
+const uint8_t EMITTER_PIN = QTR_NO_EMITTER_PIN; //Pas d'emetteur
 
 #define VERS_LA_BASE        0
 #define VERS_LES_TABLES     1
 
-int numRangee = 0;
-int etat = VERS_LES_TABLES;
+uint8_t numRangee = 0;
+uint8_t positionCible = VERS_LES_TABLES;
 bool arriveTable = false;
 
 //initialise tous les capteurs dans le arduino
@@ -21,8 +21,8 @@ QTRSensorsAnalog qtra((unsigned char[]) {A7, A6, A5, A4, A3, A2, A1, A0}, NB_CAP
 unsigned int valeursCapteur[NB_CAPTEURS];
 
 //Constante et propriété du PID
-const int OBJECTIF = 3500;
-#define VITESSE_MAX  0.3
+const uint16_t OBJECTIF = 3500;
+const float VITESSE_MAX = 0.3;
 
 const float kP = 0.0001;
 const float kD = 0.001;
@@ -63,49 +63,47 @@ void suivreLigne()
   unsigned int position = qtra.readLine(valeursCapteur);
   //Serial.print("Position : ");
   //Serial.print(position);
-  
+
   //lorsqu'au moins 6 capteurs détectent une ligne, cela veut dire qu'il a atteint une ligne perpendiculaire
-    if (qtra.numSensorsHigh(valeursCapteur) > 6)
+  if (qtra.numSensorsHigh(valeursCapteur) > 6)
+  {
+    if (arriveTable == false)
     {
-        if (arriveTable == false)
-        {
-            switch (etat)
-            {
-            case VERS_LA_BASE:
-                numRangee--;
-                break;
+      switch (positionCible)
+      {
+        case VERS_LA_BASE:
+          numRangee--;
+          break;
 
-            case VERS_LES_TABLES:
-                numRangee++;
-                break;
+        case VERS_LES_TABLES:
+          numRangee++;
+          break;
 
-            default:
-                break;
-            }
-        }
-        
-        
-        else
-        {
-            avancer(0, 0);
-            delay(1000);
-            //met le cabaret sur la table
-            // retourBase();
-        }
+        default:
+          break;
+      }
     }
+    else
+    {
+      avancer(0, 0);
+      delay(1000);
+      //met le cabaret sur la table
+      // retourBase();
+    }
+  }
 
-  //calcul la différence entre le milieu des capteurs et la ligne
+  // Calcul la différence entre le milieu des capteurs et la ligne
   int erreur = OBJECTIF - position;
   //Serial.print("\tErreur : ");
   //Serial.print(erreur);
 
-  //calcul un coefficient à mettre devant la vitesse de moteurs pour ajuster la trajectoire
+  // Calcul un coefficient à mettre devant la vitesse de moteurs pour ajuster la trajectoire
   float ajustement = (kP * erreur) + (kD * (erreur - derniereErreur));
   //Serial.print("\tAjustement : ");
   //Serial.print(ajustement);
   //Serial.print("\t");
   
-  //garde en mémoire la dernière erreur 
+  // Garde en mémoire la dernière erreur
   derniereErreur = erreur;
 
   float vitesseG = constrain(VITESSE_MAX + ajustement, 0 , VITESSE_MAX);
@@ -116,7 +114,7 @@ void suivreLigne()
   //Serial.print("\tVitesse Droite : ");
   //Serial.print(vitesseD);
   //Serial.print("\n");
-  
+
   //Tant qu'il y a un objet à moins de 15cm du sonor, il ne bouge plus
   /*while (distanceMur < 15)
   {
@@ -130,8 +128,6 @@ void suivreLigne()
     Serial.print('\t');
   }
   Serial.println(position); // comment this line out if you are using raw values
-
-  //delay(500);
 }
 
 #endif // SUIVEURLIGNE_H

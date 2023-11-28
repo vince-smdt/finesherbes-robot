@@ -4,11 +4,11 @@
 #include <LibRobus.h>
 #include "SuiveurLigne.h"
 
-int table;
-int rangee;
-int cote;
+uint8_t table;
+uint8_t rangee;
+uint8_t cote;
 
-int periode = 250;
+uint16_t periode = 250;
 uint32_t tempsLigne = 0;
 
 void setTable();
@@ -57,7 +57,7 @@ void livraison()
 
   avancer(0, 0);
   delay(500);
-  tourner90(cote);
+  tourner(cote, 90);
   arriveTable = true;
 
   while (arriveTable)
@@ -69,9 +69,8 @@ void livraison()
 void retourBase()
 {
   arriveTable = false;
-  tourner90(LEFT);
-  tourner90(LEFT);
-  etat = VERS_LA_BASE;
+  tourner(LEFT, 180);
+  positionCible = VERS_LA_BASE;
 }
 
 #endif // COMMANDE_H
