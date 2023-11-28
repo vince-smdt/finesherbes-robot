@@ -8,6 +8,7 @@
 const uint8_t NB_CAPTEURS = 8;
 const uint8_t NB_LECTURES = 4; //Calcul la moyenne de 4 lectures d'un capteur pour normaliser la valeur
 const uint8_t EMITTER_PIN = QTR_NO_EMITTER_PIN; //Pas d'emetteur
+const uint8_t LUMIERE_PIN = 13;
 
 #define VERS_LA_BASE        0
 #define VERS_LES_TABLES     1
@@ -33,13 +34,13 @@ void suivreLigne();
 
 void calibrationSuiveurLigne()
 {
-  pinMode(13, OUTPUT);
-  digitalWrite(13, HIGH);    //active la lumière du arduino
+  pinMode(LUMIERE_PIN, OUTPUT);
+  digitalWrite(LUMIERE_PIN, HIGH);    //active la lumière du arduino
   for (int i = 0; i < 150; i++)  //calibration des capteurs
   {
     qtra.calibrate(); 
   }
-  digitalWrite(13, LOW);     //éteint la lumière, la calibration est finie
+  digitalWrite(LUMIERE_PIN, LOW);     //éteint la lumière, la calibration est finie
 
   // print the calibration minimum values measured when emitters were on
   for (int i = 0; i < NB_CAPTEURS; i++)
