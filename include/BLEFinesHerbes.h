@@ -3,18 +3,12 @@
 
 #include <Arduino.h>
 #include <Queue.h>
+#include "Types.h"
 
 const byte numChars = 32;
 char receivedChars[numChars];
 
 Queue<Commande> liste_Commandes;
-
-struct Commande
-{
-  int NumTable;
-  int NumPlat;
-};
-
 
 bool newData = false;
 

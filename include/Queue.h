@@ -16,8 +16,7 @@ private:
 public:
     Queue() = default;                                                        // empty constructor
     Queue(Queue const& value);                                                // copy constructor
-
-    Queue(Queue&& move) noexcept;                                             // move constuctor
+                                          // move constuctor
     Queue& operator=(Queue&& move) noexcept;                                  // move assignment operator
     ~Queue();                                                                 // destructor
 
@@ -49,11 +48,6 @@ Queue<T>::Queue(Queue<T> const& value)  {
 }
 
 template <class T>
-Queue<T>::Queue(Queue&& move) noexcept {
-    move.swap(*this);
-}
-
-template <class T>
 Queue<T>& Queue<T>::operator=(Queue<T> &&move) noexcept {
     move.swap(*this);
     return *this;
@@ -76,9 +70,6 @@ int Queue<T>::size() const {
 
 template <class T>
 T& Queue<T>::front() const {
-    if(first == nullptr) {
-        throw std::out_of_range("the Queue is empty!");
-    }
     return first->data;
 }
 
@@ -104,26 +95,7 @@ void Queue<T>::push(const T& theData) {
 }
 
 template <class T>
-void Queue<T>::push(T&& theData) {
-    Node* newNode = new Node;
-    newNode->data = std::move(theData);
-    newNode->next = nullptr;
-
-    if(first == nullptr) {
-        first = last = newNode;
-    }
-
-    else {
-        last->next = newNode;
-        last = newNode;
-    }
-}
-
-template <class T>
 void Queue<T>::pop() {
-    if(first == nullptr) {
-        throw std::invalid_argument("the Queue is empty!");
-    }
     do_unchecked_pop();
 }
 

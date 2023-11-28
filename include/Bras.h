@@ -42,7 +42,9 @@ void lever_plateau()
 
     // On specifie le nouvel etat du robot
     case FINI_LEVER_PLATEAU: {
-      g_etat = PRET_DEPOSER_PLATEAU;
+      arret();
+      debug_beep(5, 25);
+      delay(60000);
       break; 
     }
   }
@@ -68,7 +70,9 @@ void deposer_plateau()
 
     // On specifie le nouvel etat du robot
     case FINI_DEPOSER_PLATEAU: {
-      g_etat = PRET_LEVER_PLATEAU;
+      g_rangee_cible = -2;
+      g_debut_sortie_de_ligne = millis();
+      g_etat = SUIVRE_LIGNE_JUSQUA_BRAS_SOUS_PLATEAU;
       break;
     }
   }

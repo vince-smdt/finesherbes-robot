@@ -18,7 +18,7 @@ const float kD = 0.001;
 float derniereErreur = 0;
 
 void calibrationSuiveurLigne();
-void suivreLigne();
+bool suivreLigne();
 
 void calibrationSuiveurLigne()
 {
@@ -46,86 +46,36 @@ void calibrationSuiveurLigne()
   }
 }
 
-void suivreLigne()
+bool suivreLigne()
 {
-  //calcul la position de la ligne (entre 0 et 7000) selon les lectures des capteurs
+  bool ligneDetectee = false;
+  
+  // Calcul la position de la ligne (entre 0 et 7000) selon les lectures des capteurs
   unsigned int position = qtra.readLine(valeursCapteur);
-  //Serial.print("Position : ");
-  //Serial.print(position);
 
   //lorsqu'au moins 6 capteurs détectent une ligne, cela veut dire qu'il a atteint une ligne perpendiculaire
-  // Serial.print("numSensorsHigh: ");
-  // Serial.println(qtra.numSensorsHigh(valeursCapteur));
   if (qtra.numSensorsHigh(valeursCapteur) > 4 && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE)
   {
     debug_beep(1, 25);
     g_debut_sortie_de_ligne = millis();
-
-    switch (g_etat)
-    {
-      case SUIVRE_LIGNE_VERS_RANGEE: {
-        g_rangee_actuelle--;
-        Serial.print("g_rangee_actuelle--: ");
-        Serial.println(g_rangee_actuelle);
-        break;
-      }
-
-      case SUIVRE_LIGNE_VERS_CUISINE: {
-        g_rangee_actuelle++;
-        Serial.print("g_rangee_actuelle++: ");
-        Serial.println(g_rangee_actuelle);
-        break;
-      }
-
-      case SUIVRE_LIGNE_VERS_TABLE: {
-        g_devant_table = true;
-        break;
-      }
-
-      case SUIVRE_LIGNE_VERS_LIGNE_CENTRALE: {
-        g_devant_table = false;
-        break;
-      }
-    }
+    ligneDetectee = true;
   }
 
   // Calcul la différence entre le milieu des capteurs et la ligne
   int erreur = POSITION_CENTRE_LIGNE - position;
-  //Serial.print("\tErreur : ");
-  //Serial.print(erreur);
 
   // Calcul un coefficient à mettre devant la vitesse de moteurs pour ajuster la trajectoire
   float ajustement = (kP * erreur) + (kD * (erreur - derniereErreur));
-  //Serial.print("\tAjustement : ");
-  //Serial.print(ajustement);
-  //Serial.print("\t");
 
   // Garde en mémoire la dernière erreur
   derniereErreur = erreur;
 
+  // Corrige la vitesse des deux moteurs
   float vitesseG = constrain(VITESSE_MAX + ajustement, 0 , VITESSE_MAX);
   float vitesseD = constrain(VITESSE_MAX - ajustement, 0 , VITESSE_MAX);
   avancer(vitesseG, vitesseD);
-  //Serial.print("Vitesse Gauche : ");
-  //Serial.print(vitesseG);
-  //Serial.print("\tVitesse Droite : ");
-  //Serial.print(vitesseD);
-  //Serial.print("\n");
 
-  //Tant qu'il y a un objet à moins de 15cm du sonor, il ne bouge plus
-  /*while (distanceMur < 15)
-  {
-    avancer(0, 0);
-  }
-*/
-
-  /*for (unsigned char i = 0; i < NB_CAPTEURS; i++)
-  {
-    Serial.print(valeursCapteur[i]);
-    Serial.print('\t');
-  }
-  Serial.println(position); // comment this line out if you are using raw values
-  */
+  return ligneDetectee;
 }
 
 #endif // SUIVEURLIGNE_H
