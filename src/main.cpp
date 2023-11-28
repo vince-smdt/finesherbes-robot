@@ -60,12 +60,21 @@ void loop()
       break;
     }
 
-    // Pathfinding
+    // Porter nourriture
     case INITIER_COMMANDE:
     case SUIVRE_LIGNE_VERS_RANGEE:
     case TOURNER_VERS_TABLE_CLIENT:
     case SUIVRE_LIGNE_VERS_TABLE: {
       livraison();
+      break;
+    }
+
+    // Retour au point de base
+    case TOURNER_VERS_LIGNE_CENTRALE:
+    case SUIVRE_LIGNE_VERS_LIGNE_CENTRALE:
+    case TOURNER_VERS_CUISINE:
+    case SUIVRE_LIGNE_VERS_CUISINE: {
+      retourBase();
       break;
     }
   }

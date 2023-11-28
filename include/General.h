@@ -8,8 +8,11 @@ const uint16_t PULSES_TOURNER_90_DEG = 1940;
 const float VITESSE_TOURNER = 0.2;
 
 void avancer(float vitesseG, float vitesseD);
-bool tourner(uint8_t sens, uint16_t angle);
+void commencerTourner(uint8_t sens, uint16_t angle);
+bool finiTourner();
+void arret();
 uint32_t temps_ecoule(uint32_t debut);
+void debug_beep(int count, int ms);
 
 // Fait avancer le robot
 void avancer(float vitesseG, float vitesseD)
@@ -18,31 +21,39 @@ void avancer(float vitesseG, float vitesseD)
   MOTOR_SetSpeed(RIGHT, vitesseD);
 }
 
-// void tourner(uint8_t sens, uint16_t angle)
-// {
-//   const int32_t PULSES_A_TOURNER = PULSES_TOURNER_90_DEG * (angle/90.0);
-
-//   ENCODER_Reset(LEFT);
-//   ENCODER_Reset(RIGHT);
-
-//   while (ENCODER_Read(LEFT) < PULSES_A_TOURNER && ENCODER_Read(RIGHT) < PULSES_A_TOURNER)
-//   {
-//     (sens == RIGHT) ? avancer(VITESSE_TOURNER, -VITESSE_TOURNER) : avancer(-VITESSE_TOURNER, VITESSE_TOURNER);
-//   }
-// }
-
-// True si ça tourne, false si on a fini.
-bool tourner(uint8_t sens, uint16_t angle)
+void commencerTourner(uint8_t sens, uint16_t angle)
 {
-  g_pulses_pour_tourner = PULSES_TOURNER_90_DEG * (angle/90.0);
+  ENCODER_Reset(LEFT);
+  ENCODER_Reset(RIGHT);
 
+  g_pulses_pour_tourner = PULSES_TOURNER_90_DEG * (angle/90.0);
   (sens == RIGHT) ? avancer(VITESSE_TOURNER, -VITESSE_TOURNER) : avancer(-VITESSE_TOURNER, VITESSE_TOURNER);
-  return ENCODER_Read(LEFT) < g_pulses_pour_tourner && ENCODER_Read(RIGHT) < g_pulses_pour_tourner;
+}
+
+// Retourne false si on a fini de tourner
+bool finiTourner()
+{
+  return ENCODER_Read(LEFT) >= g_pulses_pour_tourner || ENCODER_Read(RIGHT) >= g_pulses_pour_tourner;
+}
+
+void arret() {
+  MOTOR_SetSpeed(LEFT, 0);
+  MOTOR_SetSpeed(RIGHT, 0);
 }
 
 // Retourne le temps ecoule depsuis le temps specifie en param
 uint32_t temps_ecoule(uint32_t debut) {
   return millis() - debut;
+}
+
+// Fait beeper le robot, seulement utiliser pour debugger
+void debug_beep(int count, int ms){
+  for(int i = 0; i < count; i++) {
+    AX_BuzzerON();
+    delay(ms);
+    AX_BuzzerOFF();
+    delay(ms);
+  }
 }
 
 #endif // GENERAL_H

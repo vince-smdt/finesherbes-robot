@@ -2,6 +2,9 @@
 #define SUIVEURLIGNE_H
 
 #include <QTRSensors.h>
+
+#include "Constantes.h"
+
 #include "General.h"
 #include "DetectMicroSonore.h"
 
@@ -18,7 +21,6 @@ const uint8_t LUMIERE_PIN = 13;
 
 uint8_t rangeeActuelle = 0;
 uint8_t positionCible = VERS_LES_TABLES;
-bool arriveTable = false;
 
 //initialise tous les capteurs dans le arduino
 QTRSensorsAnalog qtra((unsigned char[]) {A7, A6, A5, A4, A3, A2, A1, A0}, NB_CAPTEURS, NB_LECTURES, EMITTER_PIN);
@@ -33,7 +35,6 @@ const float kD = 0.001;
 float derniereErreur = 0;
 
 void calibrationSuiveurLigne();
-void retourBase();
 void suivreLigne();
 
 void calibrationSuiveurLigne()
@@ -62,35 +63,6 @@ void calibrationSuiveurLigne()
   }
 }
 
-void retourBase()
-{
-  arriveTable = false;
-  Serial.println("Tourner 180 dans retourbase");
-  tourner(LEFT, 180);
-  positionCible = VERS_LA_BASE;
-  //Tant qu'il ne coise pas la ligne, il suit la ligne
-  while (qtra.numSensorsHigh(valeursCapteur) < 6)
-  {
-    suivreLigne();
-  }
-  Serial.print("\n");
-
-  //numRangee--;
-  Serial.print(rangeeActuelle);
-  avancer(0, 0);
-  delay(1000);
-  //tourne dans la direction opposé à celle q'il a tourné précédamment pour se rendre à la table
-  (cote == RIGHT) ? tourner(LEFT, 90) : tourner(RIGHT, 90);
-
-  //tant qu'il n'est pas au départ il suit la ligne
-  while (rangeeActuelle != 0)
-  {
-    suivreLigne();
-  }
-
-  avancer(0,0);
-}
-
 void suivreLigne()
 {
   //calcul la position de la ligne (entre 0 et 7000) selon les lectures des capteurs
@@ -101,14 +73,20 @@ void suivreLigne()
   //lorsqu'au moins 6 capteurs détectent une ligne, cela veut dire qu'il a atteint une ligne perpendiculaire
   // Serial.print("numSensorsHigh: ");
   // Serial.println(qtra.numSensorsHigh(valeursCapteur));
-  if (qtra.numSensorsHigh(valeursCapteur) > 4)
+  if (qtra.numSensorsHigh(valeursCapteur) > 4 && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE)
   {
-    while (qtra.numSensorsHigh(valeursCapteur) > 4)
-    {
-      avancer(0.2, 0.2);
-    }
+    debug_beep(1, 25);
+    g_debut_sortie_de_ligne = millis();
 
-    if (arriveTable == false)
+    if (g_devant_table)
+    {
+      g_devant_table = false; // On retourne vers la ligne centrale, on quitte la table
+    }
+    else if (g_bonne_rangee)
+    {
+      g_devant_table = true; // On arrive de la ligne centrale, on arrive devant la table
+    }
+    else
     {
       switch (positionCible)
       {
@@ -127,12 +105,6 @@ void suivreLigne()
         default:
           break;
       }
-    }
-    else
-    {
-      avancer(0, 0);
-      //met le cabaret sur la table
-      retourBase();
     }
   }
 
