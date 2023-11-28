@@ -5,7 +5,7 @@
 #include "General.h"
 #include "DetectMicroSonore.h"
 
-uint8_t rangee;
+uint8_t rangeeCible;
 uint8_t cote;
 
 const uint8_t NB_CAPTEURS = 8;
@@ -16,7 +16,7 @@ const uint8_t LUMIERE_PIN = 13;
 #define VERS_LA_BASE        0
 #define VERS_LES_TABLES     1
 
-uint8_t numRangee = 0;
+uint8_t rangeeActuelle = 0;
 uint8_t positionCible = VERS_LES_TABLES;
 bool arriveTable = false;
 
@@ -65,26 +65,27 @@ void calibrationSuiveurLigne()
 void retourBase()
 {
   arriveTable = false;
+  Serial.println("Tourner 180 dans retourbase");
   tourner(LEFT, 180);
   positionCible = VERS_LA_BASE;
   //Tant qu'il ne coise pas la ligne, il suit la ligne
   while (qtra.numSensorsHigh(valeursCapteur) < 6)
   {
-      suivreLigne();
+    suivreLigne();
   }
   Serial.print("\n");
 
   //numRangee--;
-  Serial.print(numRangee);
+  Serial.print(rangeeActuelle);
   avancer(0, 0);
   delay(1000);
   //tourne dans la direction opposé à celle q'il a tourné précédamment pour se rendre à la table
   (cote == RIGHT) ? tourner(LEFT, 90) : tourner(RIGHT, 90);
-  
+
   //tant qu'il n'est pas au départ il suit la ligne
-  while (numRangee != 0)
+  while (rangeeActuelle != 0)
   {
-      suivreLigne();
+    suivreLigne();
   }
 
   avancer(0,0);
@@ -98,6 +99,8 @@ void suivreLigne()
   //Serial.print(position);
 
   //lorsqu'au moins 6 capteurs détectent une ligne, cela veut dire qu'il a atteint une ligne perpendiculaire
+  // Serial.print("numSensorsHigh: ");
+  // Serial.println(qtra.numSensorsHigh(valeursCapteur));
   if (qtra.numSensorsHigh(valeursCapteur) > 4)
   {
     while (qtra.numSensorsHigh(valeursCapteur) > 4)
@@ -110,11 +113,15 @@ void suivreLigne()
       switch (positionCible)
       {
         case VERS_LA_BASE:
-          numRangee--;
+          rangeeActuelle--;
+          Serial.print("numrangee--: ");
+          Serial.println(rangeeActuelle);
           break;
 
         case VERS_LES_TABLES:
-          numRangee++;
+          rangeeActuelle++;
+          Serial.print("numrangee++: ");
+          Serial.println(rangeeActuelle);
           break;
 
         default:

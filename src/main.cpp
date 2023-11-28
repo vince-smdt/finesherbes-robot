@@ -17,15 +17,15 @@ void setup()
   Serial.begin(9600);
   calibrationSuiveurLigne();
   // BLESetup();
-  setup_plateau();
-  MicroSonoreSetup();
-  LumieresSetup();
+  // setup_plateau();
+  // MicroSonoreSetup();
+  // LumieresSetup();
 }
 
 void loop()
 {
   // LumieresLoop();
-  livraison();
+  // livraison();
 
   // if(MicroSonoreRobot() <= 3){
   //   avancer(0,0);
@@ -34,14 +34,13 @@ void loop()
   //   avancer(0.1, 0.1);
   // }
 
-  /*
-  Serial.println("VERIF NON-BLOQUANT"); // Pour s'assurer qu'aucune fonction n'est bloquante
+  // Serial.println("VERIF NON-BLOQUANT"); // Pour s'assurer qu'aucune fonction n'est bloquante
 
   // On execute la fonction voulue en fonction de l'etat actuel
   switch (g_etat) {
     // Etats initiaux
     case DEPART: {
-      g_etat = PRET_DEPOSER_PLATEAU;
+      g_etat = INITIER_COMMANDE;
       break;
     }
 
@@ -60,5 +59,14 @@ void loop()
       lever_plateau();
       break;
     }
-  }*/
+
+    // Pathfinding
+    case INITIER_COMMANDE:
+    case SUIVRE_LIGNE_VERS_RANGEE:
+    case TOURNER_VERS_TABLE_CLIENT:
+    case SUIVRE_LIGNE_VERS_TABLE: {
+      livraison();
+      break;
+    }
+  }
 }
