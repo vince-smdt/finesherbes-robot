@@ -169,9 +169,9 @@ void QTRSensors::calibrateOnOrOff(unsigned int **calibratedMinimum,
                                         unsigned char readMode)
 {
     int i;
-    unsigned int sensor_values[16];
-    unsigned int max_sensor_values[16];
-    unsigned int min_sensor_values[16];
+    // unsigned int sensor_values[16];
+    // unsigned int max_sensor_values[16];
+    // unsigned int min_sensor_values[16];
 
     // Allocate the arrays if necessary.
     if(*calibratedMaximum == 0)
@@ -227,14 +227,11 @@ void QTRSensors::calibrateOnOrOff(unsigned int **calibratedMinimum,
 
     int valeursMax[] = {997, 991, 984, 983, 986, 986, 1007, 1018};
     int valeursMin[] = {31, 33, 33, 32, 34, 34, 41, 50};
-    for (int i = 0; i < _numSensors; i++)
+    for (i = 0; i < _numSensors; i++)
     {
         (*calibratedMaximum)[i] = valeursMax[i];
         (*calibratedMinimum)[i] = valeursMin[i];
-
     }
-    
-
 }
 
 

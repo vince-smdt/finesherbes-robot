@@ -4,9 +4,6 @@
 #include <LibRobus.h>
 #include "SuiveurLigne.h"
 
-uint8_t table = 0;
-uint32_t tempsLigne = 0;
-
 void setTable();
 void pickCommande();
 void livraison();
@@ -14,7 +11,7 @@ void retourBase();
 
 void setTable()
 {
-  table = 1;
+  g_table = 1;
 }
 
 int getPlat()
@@ -34,9 +31,8 @@ void livraison()
     case INITIER_COMMANDE: {
       Serial.println("INITIER_COMMANDE");
       setTable();
-      rangeeCible = round(table/2.0);
-      cote = table%2;
-      positionCible = VERS_LES_TABLES;
+      g_rangee_cible = round(g_table/2.0);
+      g_cote = g_table%2;
 
       Serial.println("SUIVRE_LIGNE_VERS_RANGEE");
       g_etat = SUIVRE_LIGNE_VERS_RANGEE;
@@ -45,8 +41,8 @@ void livraison()
 
     case SUIVRE_LIGNE_VERS_RANGEE: {
       suivreLigne();
-      if (rangeeActuelle == rangeeCible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
-        commencerTourner(cote, 90);
+      if (g_rangee_actuelle == g_rangee_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
+        commencerTourner(g_cote, 90);
         g_etat = TOURNER_VERS_TABLE_CLIENT;
       }
       break;
@@ -54,7 +50,6 @@ void livraison()
 
     case TOURNER_VERS_TABLE_CLIENT: {
       if (finiTourner()) {
-        g_bonne_rangee = true;
         Serial.println("SUIVRE_LIGNE_VERS_TABLE");
         g_etat = SUIVRE_LIGNE_VERS_TABLE;
       }
@@ -64,9 +59,8 @@ void livraison()
     case SUIVRE_LIGNE_VERS_TABLE: {
       suivreLigne();
       if (g_devant_table) {
-        commencerTourner(!cote, 180);
+        commencerTourner(!g_cote, 180);
         Serial.println("TOURNER_VERS_LIGNE_CENTRALE");
-        positionCible = VERS_LA_BASE;
         g_etat = TOURNER_VERS_LIGNE_CENTRALE;
       }
       break;
@@ -87,7 +81,7 @@ void retourBase() {
     case SUIVRE_LIGNE_VERS_LIGNE_CENTRALE: {
       suivreLigne();
       if (!g_devant_table) {
-        commencerTourner(!cote, 90);
+        commencerTourner(!g_cote, 90);
         Serial.println("TOURNER_VERS_CUISINE");
         g_etat = TOURNER_VERS_CUISINE;
       }
@@ -96,7 +90,7 @@ void retourBase() {
 
     case TOURNER_VERS_CUISINE: {
       if (finiTourner()) {
-        g_bonne_rangee = false;
+        g_rangee_cible = 0;
         Serial.println("SUIVRE_LIGNE_VERS_CUISINE");
         g_etat = SUIVRE_LIGNE_VERS_CUISINE;
       }
@@ -105,10 +99,10 @@ void retourBase() {
 
     case SUIVRE_LIGNE_VERS_CUISINE: {
       suivreLigne();
-      if (rangeeActuelle == rangeeCible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
+      if (g_rangee_actuelle == g_rangee_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
         arret();
         debug_beep(5, 25);
-        delay(5000);
+        delay(10000);
       }
       break;
     }

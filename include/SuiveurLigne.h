@@ -8,28 +8,11 @@
 #include "General.h"
 #include "DetectMicroSonore.h"
 
-uint8_t rangeeCible;
-uint8_t cote;
-
-const uint8_t NB_CAPTEURS = 8;
-const uint8_t NB_LECTURES = 4; //Calcul la moyenne de 4 lectures d'un capteur pour normaliser la valeur
-const uint8_t EMITTER_PIN = QTR_NO_EMITTER_PIN; //Pas d'emetteur
-const uint8_t LUMIERE_PIN = 13;
-
-#define VERS_LA_BASE        0
-#define VERS_LES_TABLES     1
-
-uint8_t rangeeActuelle = 0;
-uint8_t positionCible = VERS_LES_TABLES;
-
 //initialise tous les capteurs dans le arduino
-QTRSensorsAnalog qtra((unsigned char[]) {A7, A6, A5, A4, A3, A2, A1, A0}, NB_CAPTEURS, NB_LECTURES, EMITTER_PIN);
-unsigned int valeursCapteur[NB_CAPTEURS];
+QTRSensorsAnalog qtra((unsigned char[]) {A7, A6, A5, A4, A3, A2, A1, A0}, NB_CAPTEURS_SUIVEUR_LIGNE, NB_LECTURES_SUIVEUR_LIGNE, SUIVEUR_LIGNE_EMITTER_PIN);
+unsigned int valeursCapteur[NB_CAPTEURS_SUIVEUR_LIGNE];
 
-//Constante et propriété du PID
-const uint16_t OBJECTIF = 3500;
-const float VITESSE_MAX = 0.3;
-
+// Propriété du PID
 const float kP = 0.0001;
 const float kD = 0.001;
 float derniereErreur = 0;
@@ -39,16 +22,16 @@ void suivreLigne();
 
 void calibrationSuiveurLigne()
 {
-  pinMode(LUMIERE_PIN, OUTPUT);
-  digitalWrite(LUMIERE_PIN, HIGH);    //active la lumière du arduino
+  pinMode(SUIVEUR_LIGNE_LUMIERE_PIN, OUTPUT);
+  digitalWrite(SUIVEUR_LIGNE_LUMIERE_PIN, HIGH);    //active la lumière du arduino
   for (int i = 0; i < 150; i++)  //calibration des capteurs
   {
     qtra.calibrate(); 
   }
-  digitalWrite(LUMIERE_PIN, LOW);     //éteint la lumière, la calibration est finie
+  digitalWrite(SUIVEUR_LIGNE_LUMIERE_PIN, LOW);     //éteint la lumière, la calibration est finie
 
   // print the calibration minimum values measured when emitters were on
-  for (int i = 0; i < NB_CAPTEURS; i++)
+  for (int i = 0; i < NB_CAPTEURS_SUIVEUR_LIGNE; i++)
   {
     Serial.print(qtra.calibratedMinimumOn[i]);
     Serial.print(' ');
@@ -56,7 +39,7 @@ void calibrationSuiveurLigne()
   Serial.println();
   
   // print the calibration maximum values measured when emitters were on
-  for (int i = 0; i < NB_CAPTEURS; i++)
+  for (int i = 0; i < NB_CAPTEURS_SUIVEUR_LIGNE; i++)
   {
     Serial.print(qtra.calibratedMaximumOn[i]);
     Serial.print(' ');
@@ -78,38 +61,36 @@ void suivreLigne()
     debug_beep(1, 25);
     g_debut_sortie_de_ligne = millis();
 
-    if (g_devant_table)
+    switch (g_etat)
     {
-      g_devant_table = false; // On retourne vers la ligne centrale, on quitte la table
-    }
-    else if (g_bonne_rangee)
-    {
-      g_devant_table = true; // On arrive de la ligne centrale, on arrive devant la table
-    }
-    else
-    {
-      switch (positionCible)
-      {
-        case VERS_LA_BASE:
-          rangeeActuelle--;
-          Serial.print("numrangee--: ");
-          Serial.println(rangeeActuelle);
-          break;
+      case SUIVRE_LIGNE_VERS_RANGEE: {
+        g_rangee_actuelle--;
+        Serial.print("g_rangee_actuelle--: ");
+        Serial.println(g_rangee_actuelle);
+        break;
+      }
 
-        case VERS_LES_TABLES:
-          rangeeActuelle++;
-          Serial.print("numrangee++: ");
-          Serial.println(rangeeActuelle);
-          break;
+      case SUIVRE_LIGNE_VERS_CUISINE: {
+        g_rangee_actuelle++;
+        Serial.print("g_rangee_actuelle++: ");
+        Serial.println(g_rangee_actuelle);
+        break;
+      }
 
-        default:
-          break;
+      case SUIVRE_LIGNE_VERS_TABLE: {
+        g_devant_table = true;
+        break;
+      }
+
+      case SUIVRE_LIGNE_VERS_LIGNE_CENTRALE: {
+        g_devant_table = false;
+        break;
       }
     }
   }
 
   // Calcul la différence entre le milieu des capteurs et la ligne
-  int erreur = OBJECTIF - position;
+  int erreur = POSITION_CENTRE_LIGNE - position;
   //Serial.print("\tErreur : ");
   //Serial.print(erreur);
 
