@@ -2,9 +2,6 @@
 #define GENERAL_H
 
 #include <LibRobus.h>
-#include <stdint.h>
-#define GAUCHE              1
-#define DROITE              0
 
 const uint8_t IR_DIST_MIN = 10;
 const uint8_t IR_DIST_MAX = 80;
@@ -38,20 +35,17 @@ void tourner90(int sens)
 
   while (ENCODER_Read(0) < PULSES_TOURNER_90_DEG && ENCODER_Read(1) < PULSES_TOURNER_90_DEG)
   {
-    (sens == DROITE) ? avancer(VITESSE_TOURNER, -1*VITESSE_TOURNER) : avancer(-1*VITESSE_TOURNER, VITESSE_TOURNER);
+    (sens == RIGHT) ? avancer(VITESSE_TOURNER, -1*VITESSE_TOURNER) : avancer(-1*VITESSE_TOURNER, VITESSE_TOURNER);
     Serial.print(ENCODER_Read(0));
     Serial.print("\t");
     Serial.print(ENCODER_Read(1));
     Serial.print("\n");
   }
-  
-
 }
 
 // Retourne le temps ecoule depsuis le temps specifie en param
 uint32_t temps_ecoule(uint32_t debut) {
   return millis() - debut;
 }
-
 
 #endif // GENERAL_H

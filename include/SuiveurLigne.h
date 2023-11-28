@@ -12,9 +12,6 @@
 #define VERS_LA_BASE        0
 #define VERS_LES_TABLES     1
 
-#define GAUCHE              1
-#define DROITE              0
-
 int numRangee = 0;
 int etat = VERS_LES_TABLES;
 bool arriveTable = false;
@@ -23,7 +20,6 @@ bool arriveTable = false;
 QTRSensorsAnalog qtra((unsigned char[]) {A7, A6, A5, A4, A3, A2, A1, A0}, NB_CAPTEURS, NB_LECTURES, EMITTER_PIN);
 unsigned int valeursCapteur[NB_CAPTEURS];
 
-
 //Constante et propriété du PID
 const int OBJECTIF = 3500;
 #define VITESSE_MAX  0.3
@@ -31,6 +27,9 @@ const int OBJECTIF = 3500;
 const float kP = 0.0001;
 const float kD = 0.001;
 float derniereErreur = 0;
+
+void calibrationSuiveurLigne();
+void suivreLigne();
 
 void calibrationSuiveurLigne()
 {
@@ -93,10 +92,7 @@ void suivreLigne()
             //met le cabaret sur la table
             // retourBase();
         }
-
     }
-  
-  
 
   //calcul la différence entre le milieu des capteurs et la ligne
   int erreur = OBJECTIF - position;
@@ -128,7 +124,6 @@ void suivreLigne()
   }
 */
 
- 
   for (unsigned char i = 0; i < NB_CAPTEURS; i++)
   {
     Serial.print(valeursCapteur[i]);
@@ -138,6 +133,5 @@ void suivreLigne()
 
   //delay(500);
 }
-
 
 #endif // SUIVEURLIGNE_H
