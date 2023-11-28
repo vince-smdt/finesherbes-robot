@@ -4,11 +4,7 @@
 #include <LibRobus.h>
 #include "SuiveurLigne.h"
 
-uint8_t table;
-uint8_t rangee;
-uint8_t cote;
-
-uint16_t periode = 250;
+uint8_t table = 0;
 uint32_t tempsLigne = 0;
 
 void setTable();
@@ -34,6 +30,7 @@ void pickCommande()
 
 void livraison()
 {
+  setTable();
   rangee = round(table/2);
   cote = table%2;
 
@@ -49,12 +46,6 @@ void livraison()
     suivreLigne();
   }
 
-  if(millis() >= tempsLigne + periode){
-    Serial.println("Hello");
-  }
-
-  tempsLigne += periode;
-
   avancer(0, 0);
   delay(500);
   tourner(cote, 90);
@@ -64,13 +55,6 @@ void livraison()
   {
     suivreLigne();
   }
-}
-
-void retourBase()
-{
-  arriveTable = false;
-  tourner(LEFT, 180);
-  positionCible = VERS_LA_BASE;
 }
 
 #endif // COMMANDE_H
