@@ -15,7 +15,7 @@ void setup()
 {
   BoardInit();
   Serial.begin(9600);
- // calibrationSuiveurLigne();
+  calibrationSuiveurLigne();
   // BLESetup();
   setup_plateau();
   MicroSonoreSetup();
@@ -24,8 +24,8 @@ void setup()
 
 void loop()
 {
-  LumieresLoop();
-  // livraison();
+  // LumieresLoop();
+  livraison();
 
   // if(MicroSonoreRobot() <= 3){
   //   avancer(0,0);

@@ -5,6 +5,9 @@
 #include "General.h"
 #include "DetectMicroSonore.h"
 
+uint8_t rangee;
+uint8_t cote;
+
 const uint8_t NB_CAPTEURS = 8;
 const uint8_t NB_LECTURES = 4; //Calcul la moyenne de 4 lectures d'un capteur pour normaliser la valeur
 const uint8_t EMITTER_PIN = QTR_NO_EMITTER_PIN; //Pas d'emetteur
@@ -30,6 +33,7 @@ const float kD = 0.001;
 float derniereErreur = 0;
 
 void calibrationSuiveurLigne();
+void retourBase();
 void suivreLigne();
 
 void calibrationSuiveurLigne()
@@ -58,6 +62,34 @@ void calibrationSuiveurLigne()
   }
 }
 
+void retourBase()
+{
+  arriveTable = false;
+  tourner(LEFT, 180);
+  positionCible = VERS_LA_BASE;
+  //Tant qu'il ne coise pas la ligne, il suit la ligne
+  while (qtra.numSensorsHigh(valeursCapteur) < 6)
+  {
+      suivreLigne();
+  }
+  Serial.print("\n");
+
+  //numRangee--;
+  Serial.print(numRangee);
+  avancer(0, 0);
+  delay(1000);
+  //tourne dans la direction opposé à celle q'il a tourné précédamment pour se rendre à la table
+  (cote == RIGHT) ? tourner(LEFT, 90) : tourner(RIGHT, 90);
+  
+  //tant qu'il n'est pas au départ il suit la ligne
+  while (numRangee != 0)
+  {
+      suivreLigne();
+  }
+
+  avancer(0,0);
+}
+
 void suivreLigne()
 {
   //calcul la position de la ligne (entre 0 et 7000) selon les lectures des capteurs
@@ -66,8 +98,13 @@ void suivreLigne()
   //Serial.print(position);
 
   //lorsqu'au moins 6 capteurs détectent une ligne, cela veut dire qu'il a atteint une ligne perpendiculaire
-  if (qtra.numSensorsHigh(valeursCapteur) > 6)
+  if (qtra.numSensorsHigh(valeursCapteur) > 4)
   {
+    while (qtra.numSensorsHigh(valeursCapteur) > 4)
+    {
+      avancer(0.2, 0.2);
+    }
+
     if (arriveTable == false)
     {
       switch (positionCible)
@@ -87,9 +124,8 @@ void suivreLigne()
     else
     {
       avancer(0, 0);
-      delay(1000);
       //met le cabaret sur la table
-      // retourBase();
+      retourBase();
     }
   }
 
@@ -103,7 +139,7 @@ void suivreLigne()
   //Serial.print("\tAjustement : ");
   //Serial.print(ajustement);
   //Serial.print("\t");
-  
+
   // Garde en mémoire la dernière erreur
   derniereErreur = erreur;
 
@@ -123,12 +159,13 @@ void suivreLigne()
   }
 */
 
-  for (unsigned char i = 0; i < NB_CAPTEURS; i++)
+  /*for (unsigned char i = 0; i < NB_CAPTEURS; i++)
   {
     Serial.print(valeursCapteur[i]);
     Serial.print('\t');
   }
   Serial.println(position); // comment this line out if you are using raw values
+  */
 }
 
 #endif // SUIVEURLIGNE_H
