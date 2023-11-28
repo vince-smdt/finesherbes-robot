@@ -15,7 +15,7 @@ int currentYellow = 45;
 void StartYellow(unsigned long current_Millis);
 void StartGreen();
 void StartRed();
-void ResetRedGreen();
+void ResetRedGreenYellow();
 
 void LumieresSetup(){
     pinMode(43, OUTPUT);
@@ -30,7 +30,7 @@ void LumieresSetup(){
 void LumieresLoop(){
   unsigned long current_Millis = millis();
   
-  ResetRedGreen();
+  ResetRedGreenYellow();
 
   switch (g_etat)
   {
@@ -56,9 +56,13 @@ void LumieresLoop(){
   }
 }
 
-void ResetRedGreen(){
+void ResetRedGreenYellow(){
   digitalWrite(GREEN_PIN, LOW);
   digitalWrite(RED_PIN, LOW);
+  for (int i = 40; i <= 45; i++)
+  {
+    digitalWrite(i, LOW);
+  }
 }
 
 void StartYellow(unsigned long current_Millis){
