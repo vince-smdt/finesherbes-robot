@@ -9,6 +9,7 @@
 #include "SuiveurLigne.h"
 #include "DetectMicroSonore.h"
 #include "Commande.h"
+#include "Lumieres.h"
 
 void setup()
 {
@@ -18,11 +19,13 @@ void setup()
   // BLESetup();
   setup_plateau();
   MicroSonoreSetup();
+  LumieresSetup();
 }
 
 void loop()
 {
-  livraison();
+  LumieresLoop();
+  // livraison();
 
   // if(MicroSonoreRobot() <= 3){
   //   avancer(0,0);
