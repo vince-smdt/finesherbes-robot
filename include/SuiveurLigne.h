@@ -18,7 +18,7 @@ const float kD = 0.001;
 float derniereErreur = 0;
 
 void calibrationSuiveurLigne();
-bool suivreLigne();
+bool suivreLigne(float p_vitesse);
 
 void calibrationSuiveurLigne()
 {
@@ -46,7 +46,7 @@ void calibrationSuiveurLigne()
   }
 }
 
-bool suivreLigne()
+bool suivreLigne(float p_vitesse)
 {
   bool ligneDetectee = false;
   
@@ -71,8 +71,8 @@ bool suivreLigne()
   derniereErreur = erreur;
 
   // Corrige la vitesse des deux moteurs
-  float vitesseG = constrain(VITESSE_MAX + ajustement, 0 , VITESSE_MAX);
-  float vitesseD = constrain(VITESSE_MAX - ajustement, 0 , VITESSE_MAX);
+  float vitesseG = constrain(p_vitesse + ajustement, 0 , p_vitesse);
+  float vitesseD = constrain(p_vitesse - ajustement, 0 , p_vitesse);
   avancer(vitesseG, vitesseD);
 
   return ligneDetectee;
