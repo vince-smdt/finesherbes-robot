@@ -7,7 +7,7 @@
 #include "Enums.h"
 
 const uint8_t SERVO_BRAS_ID = 0;
-const uint8_t ANGLE_SERVO_DEPOSER = 120;
+const uint8_t ANGLE_SERVO_DEPOSER = 130;
 const uint8_t ANGLE_SERVO_LEVER = 180;
 const uint16_t DELAI_SERVO_BRAS = 1500;
 const uint16_t DELAI_DEPOSER_PLATEAU = 5;
@@ -43,9 +43,8 @@ void lever_plateau()
     // On specifie le nouvel etat du robot
     case FINI_LEVER_PLATEAU: {
       if (g_action == CHERCHER_COMMANDE) {
-        arret();
-        debug_beep(5, 25);
-        delay(60000);
+        g_etat = RECULER_DANS_CUISINE;
+        g_rangee_cible = -1;
       }
       else if (g_action == LIVRAISON) {
         g_colonne_cible = (g_cote_client == LEFT) ? 1 : 5;
