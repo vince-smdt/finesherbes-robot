@@ -40,7 +40,7 @@ void loop()
   switch (g_etat) {
     // Etats initiaux
     case DEPART: {
-      g_etat = INITIER_DEPART_COMMANDE;
+      g_etat = INITIER_DEPART_LIVRAISON;
       break;
     }
 
@@ -72,7 +72,7 @@ void loop()
     }
 
     // Porter nourriture
-    case INITIER_DEPART_COMMANDE:
+    case INITIER_DEPART_LIVRAISON:
     case SUIVRE_LIGNE_VERS_RANGEE:
     case TOURNER_VERS_TABLE_CLIENT:
     case SUIVRE_LIGNE_VERS_TABLE:

@@ -84,7 +84,7 @@ void chercher_commande()
 void livraison()
 {
   switch (g_etat) {
-    case INITIER_DEPART_COMMANDE: {
+    case INITIER_DEPART_LIVRAISON: {
       g_commande.NumTable = 4; // TEMP
       g_commande.NumPlat = 2;
 
