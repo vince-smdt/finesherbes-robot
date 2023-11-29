@@ -81,13 +81,11 @@ void chercher_commande()
     }
 
     case RECULER_DANS_CUISINE: {
-      if (suivreLigne(VITESSE_RECULONS))
-      {
-        g_rangee_actuelle++;
-      }
-      if (g_rangee_actuelle == g_rangee_cible) {
+      avancer(-0.1, -0.1);
+
+      if (temps_ecoule(g_debut_deplacement_hardcode) > 2000) {
         arret();
-        Serial.println("PRET_LEVER_PLATEAU");
+        Serial.println("TOURNER_VERS_SORTIE_CUISINE");
         g_etat = TOURNER_VERS_SORTIE_CUISINE;
         commencerTourner(LEFT, 180);
       }
@@ -96,12 +94,70 @@ void chercher_commande()
     }
 
     case TOURNER_VERS_SORTIE_CUISINE:{
+      arret();
+      Serial.println(g_pulses_pour_tourner);
+      Serial.print(ENCODER_Read(0));
+      Serial.print("\t");
+      Serial.println(ENCODER_Read(1));
       if (finiTourner())
       {
         arret();
-        //g_etat = 
+        g_rangee_actuelle = -1;
+        g_rangee_cible = 0;
       }
     }
+
+    case SUIVRE_LIGNE_VERS_SORTIE_CUISINE:{
+      if (suivreLigne(VITESSE_MAX))
+      {
+        g_rangee_actuelle++;
+      }
+      if (g_rangee_actuelle == g_rangee_cible)
+      {
+        g_etat = TOURNER_VERS_COLONNE_PRINCIPALE;
+        Serial.print("g_colonne_actuelle : ");
+        Serial.println(g_colonne_actuelle);
+        g_colonne_cible = 3;
+        if (g_colonne_actuelle < g_colonne_cible)
+        {
+          commencerTourner(LEFT, 90);
+        }
+        else
+        {
+          commencerTourner(RIGHT, 90);
+        }
+        
+      }
+      
+      
+    }
+
+    case TOURNER_VERS_COLONNE_PRINCIPALE:{
+      if (finiTourner())
+      {
+        arret();
+      }
+      
+    }
+
+    case SUIVRE_LIGNE_VERS_COLONNE_CENTRE_CUISINE:{
+      if (suivreLigne(VITESSE_MAX) && g_colonne_actuelle < g_colonne_cible)
+      {
+        g_colonne_actuelle++;
+      }
+      else if (suivreLigne(VITESSE_MAX) && g_colonne_actuelle > g_colonne_cible)
+      {
+        g_colonne_actuelle--;
+      }
+      if (g_colonne_actuelle == g_colonne_cible)
+      {
+        /* code */
+      }
+      
+
+      
+    }
+
   }
 }
 

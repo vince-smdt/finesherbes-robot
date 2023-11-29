@@ -45,8 +45,11 @@ void lever_plateau()
       g_debut_sortie_de_ligne = millis();
 
       if (g_action == CHERCHER_COMMANDE) {
+        g_debut_deplacement_hardcode = millis();
         g_etat = RECULER_DANS_CUISINE;
         g_rangee_cible = -1;
+        g_colonne_cible = 3;
+        Serial.println("RECULER_DANS_CUISINE");
       }
       else if (g_action == LIVRAISON) {
         g_colonne_cible = (g_cote_client == LEFT) ? 1 : 5;
