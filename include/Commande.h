@@ -133,7 +133,7 @@ void livraison()
 
     case SUIVRE_LIGNE_JUSQUA_BRAS_SUR_TABLE_CLIENT: {
       if (suivreLigne(VITESSE_MAX))
-        g_colonne_actuelle += (g_cote_client == LEFT) ? -2 : 2;
+        g_colonne_actuelle += (g_cote_client == LEFT) ? -1 : 1;
 
       if (g_colonne_actuelle == g_colonne_cible) {
         arret();

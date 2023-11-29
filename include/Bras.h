@@ -7,7 +7,7 @@
 #include "Enums.h"
 
 const uint8_t SERVO_BRAS_ID = 0;
-const uint8_t ANGLE_SERVO_DEPOSER = 120;
+const uint8_t ANGLE_SERVO_DEPOSER = 122;
 const uint8_t ANGLE_SERVO_LEVER = 180;
 const uint16_t DELAI_SERVO_BRAS = 1500;
 const uint16_t DELAI_DEPOSER_PLATEAU = 5;
@@ -42,6 +42,8 @@ void lever_plateau()
 
     // On specifie le nouvel etat du robot
     case FINI_LEVER_PLATEAU: {
+      g_debut_sortie_de_ligne = millis();
+
       if (g_action == CHERCHER_COMMANDE) {
         arret();
         debug_beep(5, 25);
@@ -49,6 +51,7 @@ void lever_plateau()
       }
       else if (g_action == LIVRAISON) {
         g_colonne_cible = (g_cote_client == LEFT) ? 1 : 5;
+        Serial.println("SUIVRE_LIGNE_JUSQUA_BRAS_SUR_TABLE_CLIENT");
         g_etat = SUIVRE_LIGNE_JUSQUA_BRAS_SUR_TABLE_CLIENT;
       }
       break; 
