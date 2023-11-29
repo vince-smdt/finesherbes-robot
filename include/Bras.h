@@ -42,12 +42,15 @@ void lever_plateau()
 
     // On specifie le nouvel etat du robot
     case FINI_LEVER_PLATEAU: {
+      g_debut_sortie_de_ligne = millis();
+
       if (g_action == CHERCHER_COMMANDE) {
         g_etat = RECULER_DANS_CUISINE;
         g_rangee_cible = -1;
       }
       else if (g_action == LIVRAISON) {
         g_colonne_cible = (g_cote_client == LEFT) ? 1 : 5;
+        Serial.println("SUIVRE_LIGNE_JUSQUA_BRAS_SUR_TABLE_CLIENT");
         g_etat = SUIVRE_LIGNE_JUSQUA_BRAS_SUR_TABLE_CLIENT;
       }
       break; 

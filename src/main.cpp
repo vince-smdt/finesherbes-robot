@@ -74,7 +74,7 @@ void loop()
     }
 
     // Porter nourriture
-    case INITIER_DEPART_COMMANDE:
+    case INITIER_DEPART_LIVRAISON:
     case SUIVRE_LIGNE_VERS_RANGEE:
     case TOURNER_VERS_TABLE_CLIENT:
     case SUIVRE_LIGNE_VERS_TABLE:
