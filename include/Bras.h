@@ -45,6 +45,7 @@ void lever_plateau()
       g_debut_sortie_de_ligne = millis();
 
       if (g_action == CHERCHER_COMMANDE) {
+        g_debut_deplacement_hardcode = millis();
         g_etat = RECULER_DANS_CUISINE;
         g_rangee_cible = -1;
       }
@@ -85,9 +86,8 @@ void deposer_plateau()
         g_etat = SUIVRE_LIGNE_JUSQUA_BRAS_SOUS_PLATEAU_CUISINE;
       }
       else if (g_action == LIVRAISON) {
-        arret();
-        debug_beep(5, 25);
-        delay(60000);
+        g_action = CHERCHER_COMMANDE;
+        g_etat = INITIER_RETOUR_BASE;
       }
       break;
     }

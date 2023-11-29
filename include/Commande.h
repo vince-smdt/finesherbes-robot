@@ -81,15 +81,14 @@ void chercher_commande()
     }
 
     case RECULER_DANS_CUISINE: {
-      if (suivreLigne(VITESSE_RECULONS))
-      {
-        g_rangee_actuelle++;
-      }
-      if (g_rangee_actuelle == g_rangee_cible) {
+      avancer(-0.1, -0.1);
+      
+      if (temps_ecoule(g_debut_deplacement_hardcode) > 1500) {
         arret();
-        Serial.println("PRET_LEVER_PLATEAU");
-        g_etat = TOURNER_VERS_SORTIE_CUISINE;
+        g_rangee_actuelle++;
         commencerTourner(LEFT, 180);
+        Serial.println("TOURNER_VERS_SORTIE_CUISINE");
+        g_etat = TOURNER_VERS_SORTIE_CUISINE;
       }
     
       break;
@@ -98,9 +97,12 @@ void chercher_commande()
     case TOURNER_VERS_SORTIE_CUISINE:{
       if (finiTourner())
       {
+        g_action = LIVRAISON;
         arret();
-        //g_etat = 
+        debug_beep(5, 25);
+        delay(120000);
       }
+      break;
     }
   }
 }
@@ -173,9 +175,6 @@ void livraison()
 void retourBase() {
   switch (g_etat) {
     case INITIER_RETOUR_BASE: {
-      g_cote_client = LEFT; // TEMP
-      g_rangee_actuelle = 1; // TEMP
-
       Serial.println("INITIER_RETOUR_BASE");
       g_debut_deplacement_hardcode = millis();
       Serial.println("RECULER_VERS_LIGNE_CENTRALE");

@@ -40,11 +40,7 @@ void loop()
   switch (g_etat) {
     // Etats initiaux
     case DEPART: {
-<<<<<<< HEAD
-      g_etat = INITIER_RETOUR_BASE;
-=======
-      g_etat = SUIVRE_LIGNE_VERS_CUISINE;
->>>>>>> ec6b4eeb9704087888f5a54d6342dc4606842a99
+      g_etat = INITIER_DEPART_LIVRAISON;
       break;
     }
 
