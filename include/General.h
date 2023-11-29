@@ -5,7 +5,7 @@
 
 // Pour faire tourner le robot
 const uint16_t PULSES_TOURNER_90_DEG = 1940;
-const float VITESSE_TOURNER = 0.2;
+const float VITESSE_TOURNER = 0.15;
 
 void avancer(float vitesseG, float vitesseD);
 void commencerTourner(uint8_t sens, uint16_t angle);
@@ -25,7 +25,6 @@ void commencerTourner(uint8_t sens, uint16_t angle)
 {
   ENCODER_Reset(LEFT);
   ENCODER_Reset(RIGHT);
-  Serial.println(ENCODER_Read(LEFT));
 
   g_pulses_pour_tourner = PULSES_TOURNER_90_DEG * (angle/90.0);
   (sens == RIGHT) ? avancer(VITESSE_TOURNER, -VITESSE_TOURNER) : avancer(-VITESSE_TOURNER, VITESSE_TOURNER);
