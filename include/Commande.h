@@ -97,10 +97,44 @@ void chercher_commande()
     case TOURNER_VERS_SORTIE_CUISINE:{
       if (finiTourner())
       {
-        g_action = LIVRAISON;
         arret();
-        debug_beep(5, 25);
-        delay(120000);
+        g_action = LIVRAISON;
+        g_rangee_cible = 0;
+        Serial.println("SUIVRE_LIGNE_VERS_SORTIE_CUISINE");
+        g_etat = SUIVRE_LIGNE_VERS_SORTIE_CUISINE;
+      }
+      break;
+    }
+
+    case SUIVRE_LIGNE_VERS_SORTIE_CUISINE:{
+      if (suivreLigne(VITESSE_MAX))
+        g_rangee_actuelle++;
+      
+      if (g_rangee_actuelle == g_rangee_cible)
+      {
+        Serial.println("TOURNER_VERS_COLONNE_PRINCIPALE");
+        g_etat = TOURNER_VERS_COLONNE_PRINCIPALE;
+        commencerTourner(g_cote_cuisine, 90);
+      }
+      break;
+    }
+
+    case TOURNER_VERS_COLONNE_PRINCIPALE:{
+      if (finiTourner())
+      {
+        g_colonne_cible = 3;
+        Serial.println("SUIVRE_LIGNE_VERS_COLONNE_CENTRE_CUISINE");
+        g_etat = SUIVRE_LIGNE_VERS_COLONNE_CENTRE_CUISINE;
+        arret();
+      }
+    }
+
+    case SUIVRE_LIGNE_VERS_COLONNE_CENTRE_CUISINE:{
+      if (suivreLigne(VITESSE_MAX))
+        g_colonne_actuelle += (g_cote_cuisine == LEFT) ? -1 : 1;
+
+      if (g_colonne_actuelle == g_colonne_cible) {
+        g_etat = INITIER_DEPART_LIVRAISON;
       }
       break;
     }

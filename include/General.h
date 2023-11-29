@@ -25,6 +25,7 @@ void commencerTourner(uint8_t sens, uint16_t angle)
 {
   ENCODER_Reset(LEFT);
   ENCODER_Reset(RIGHT);
+  Serial.println(ENCODER_Read(LEFT));
 
   g_pulses_pour_tourner = PULSES_TOURNER_90_DEG * (angle/90.0);
   (sens == RIGHT) ? avancer(VITESSE_TOURNER, -VITESSE_TOURNER) : avancer(-VITESSE_TOURNER, VITESSE_TOURNER);
