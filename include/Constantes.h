@@ -5,6 +5,7 @@
 
 // Pathfinding
 const float VITESSE_MAX = 0.3;
+const float VITESSE_RECULONS = 0.15;
 const uint16_t POSITION_CENTRE_LIGNE = 3500; // Position du robot voulue sur la ligne (0-7000)
 const uint8_t DELAI_SORTIE_DE_LIGNE = 200; // Après avoir franchi une ligne, temps que ça prend avant de redétecter des lignes pour sortir de la ligne actuelle
 const uint8_t NB_CAPTEURS_SUIVEUR_LIGNE = 8;

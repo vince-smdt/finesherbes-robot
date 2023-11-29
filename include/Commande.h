@@ -3,7 +3,7 @@
 
 #include <LibRobus.h>
 #include "SuiveurLigne.h"
-#include "BLEFinesHerbes.h"
+//#include "BLEFinesHerbes.h"
 
 void chercher_commande();
 void livraison();
@@ -22,6 +22,7 @@ void chercher_commande()
 
       g_cote_cuisine = (g_commande.NumPlat < 3) ? LEFT : RIGHT;
       commencerTourner(g_cote_cuisine, 90);
+      Serial.println("TOURNER_VERS_COTE_TABLE_CUISINE");
       g_etat = TOURNER_VERS_COTE_TABLE_CUISINE;
       break;
     }
@@ -77,6 +78,29 @@ void chercher_commande()
         g_etat = PRET_LEVER_PLATEAU;
       }
       break;
+    }
+
+    case RECULER_DANS_CUISINE: {
+      if (suivreLigne(VITESSE_RECULONS))
+      {
+        g_rangee_actuelle++;
+      }
+      if (g_rangee_actuelle == g_rangee_cible) {
+        arret();
+        Serial.println("PRET_LEVER_PLATEAU");
+        g_etat = TOURNER_VERS_SORTIE_CUISINE;
+        commencerTourner(LEFT, 180);
+      }
+    
+      break;
+    }
+
+    case TOURNER_VERS_SORTIE_CUISINE:{
+      if (finiTourner())
+      {
+        arret();
+        //g_etat = 
+      }
     }
   }
 }
@@ -141,6 +165,7 @@ void livraison()
         g_etat = PRET_DEPOSER_PLATEAU;
       }
       break;
+      
     }
   }
 }
