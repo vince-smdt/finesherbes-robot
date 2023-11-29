@@ -40,7 +40,7 @@ void loop()
   switch (g_etat) {
     // Etats initiaux
     case DEPART: {
-      g_etat = INITIER_DEPART_LIVRAISON;
+      g_etat = INITIER_RETOUR_BASE;
       break;
     }
 
@@ -82,6 +82,8 @@ void loop()
     }
 
     // Retour au point de base
+    case INITIER_RETOUR_BASE:
+    case RECULER_VERS_LIGNE_CENTRALE:
     case TOURNER_VERS_LIGNE_CENTRALE:
     case SUIVRE_LIGNE_VERS_LIGNE_CENTRALE:
     case TOURNER_VERS_CUISINE:

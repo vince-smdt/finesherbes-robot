@@ -147,17 +147,43 @@ void livraison()
 
 void retourBase() {
   switch (g_etat) {
+    case INITIER_RETOUR_BASE: {
+      g_cote_client = LEFT; // TEMP
+      g_rangee_actuelle = 1; // TEMP
+
+      Serial.println("INITIER_RETOUR_BASE");
+      g_debut_deplacement_hardcode = millis();
+      Serial.println("RECULER_VERS_LIGNE_CENTRALE");
+      g_etat = RECULER_VERS_LIGNE_CENTRALE;
+      break;
+    }
+
+    case RECULER_VERS_LIGNE_CENTRALE: {
+      avancer(-0.1, -0.1);
+
+      if (temps_ecoule(g_debut_deplacement_hardcode) > 1500) {
+        Serial.println("TOURNER_VERS_LIGNE_CENTRALE");
+        commencerTourner(RIGHT, 180);
+        g_colonne_actuelle = (g_cote_client == LEFT) ? 2 : 4;
+        g_etat = TOURNER_VERS_LIGNE_CENTRALE;
+      }
+      break;
+    }
+
     case TOURNER_VERS_LIGNE_CENTRALE: {
       if (finiTourner()) {
         Serial.println("SUIVRE_LIGNE_VERS_TABLE");
+        g_colonne_cible = 3;
         g_etat = SUIVRE_LIGNE_VERS_LIGNE_CENTRALE;
       }
       break;
     }
 
     case SUIVRE_LIGNE_VERS_LIGNE_CENTRALE: {
-      suivreLigne(VITESSE_MAX);
-      if (1/**/) { // TODO
+      if (suivreLigne(VITESSE_MAX))
+        g_colonne_actuelle += (g_cote_client == LEFT) ? 1 : -1;
+
+      if (g_colonne_actuelle == g_colonne_cible) {
         commencerTourner(!g_cote_client, 90);
         Serial.println("TOURNER_VERS_CUISINE");
         g_etat = TOURNER_VERS_CUISINE;
