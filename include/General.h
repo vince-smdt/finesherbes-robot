@@ -5,7 +5,7 @@
 
 // Pour faire tourner le robot
 const uint16_t PULSES_TOURNER_90_DEG = 1940;
-const float VITESSE_TOURNER = 0.2;
+const float VITESSE_TOURNER = 0.15;
 
 void avancer(float vitesseG, float vitesseD);
 void commencerTourner(uint8_t sens, uint16_t angle);
