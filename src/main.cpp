@@ -40,7 +40,7 @@ void loop()
   switch (g_etat) {
     // Etats initiaux
     case DEPART: {
-      g_etat = SUIVRE_LIGNE_VERS_CUISINE;
+      g_etat = INITIER_DEPART_COMMANDE;
       break;
     }
 
@@ -66,7 +66,7 @@ void loop()
     case SUIVRE_LIGNE_VERS_COLONNE_CUISINE:
     case TOURNER_VERS_TABLE_CUISINE:
     case SUIVRE_LIGNE_VERS_TABLE_CUISINE:
-    case SUIVRE_LIGNE_JUSQUA_BRAS_SOUS_PLATEAU: {
+    case SUIVRE_LIGNE_JUSQUA_BRAS_SOUS_PLATEAU_CUISINE: {
       chercher_commande();
       break;
     }
@@ -75,7 +75,8 @@ void loop()
     case INITIER_DEPART_COMMANDE:
     case SUIVRE_LIGNE_VERS_RANGEE:
     case TOURNER_VERS_TABLE_CLIENT:
-    case SUIVRE_LIGNE_VERS_TABLE: {
+    case SUIVRE_LIGNE_VERS_TABLE:
+    case SUIVRE_LIGNE_JUSQUA_BRAS_SUR_TABLE_CLIENT: {
       livraison();
       break;
     }
@@ -84,7 +85,7 @@ void loop()
     case TOURNER_VERS_LIGNE_CENTRALE:
     case SUIVRE_LIGNE_VERS_LIGNE_CENTRALE:
     case TOURNER_VERS_CUISINE:
-    case SUIVRE_LIGNE_VERS_CUISINE: {
+    case SUIVRE_LIGNE_VERS_CUISINE:{
       retourBase();
       break;
     }

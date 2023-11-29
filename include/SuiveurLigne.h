@@ -4,6 +4,7 @@
 #include <QTRSensors.h>
 
 #include "Constantes.h"
+#include "Globales.h"
 
 #include "General.h"
 #include "DetectMicroSonore.h"

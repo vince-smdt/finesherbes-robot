@@ -42,9 +42,15 @@ void lever_plateau()
 
     // On specifie le nouvel etat du robot
     case FINI_LEVER_PLATEAU: {
-      arret();
-      debug_beep(5, 25);
-      delay(60000);
+      if (g_action == CHERCHER_COMMANDE) {
+        arret();
+        debug_beep(5, 25);
+        delay(60000);
+      }
+      else if (g_action == LIVRAISON) {
+        g_colonne_cible = (g_cote_client == LEFT) ? 1 : 5;
+        g_etat = SUIVRE_LIGNE_JUSQUA_BRAS_SUR_TABLE_CLIENT;
+      }
       break; 
     }
   }
@@ -70,9 +76,17 @@ void deposer_plateau()
 
     // On specifie le nouvel etat du robot
     case FINI_DEPOSER_PLATEAU: {
-      g_rangee_cible = -2;
       g_debut_sortie_de_ligne = millis();
-      g_etat = SUIVRE_LIGNE_JUSQUA_BRAS_SOUS_PLATEAU;
+
+      if (g_action == CHERCHER_COMMANDE) {
+        g_rangee_cible = -2;
+        g_etat = SUIVRE_LIGNE_JUSQUA_BRAS_SOUS_PLATEAU_CUISINE;
+      }
+      else if (g_action == LIVRAISON) {
+        arret();
+        debug_beep(5, 25);
+        delay(60000);
+      }
       break;
     }
   }

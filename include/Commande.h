@@ -15,8 +15,8 @@ void chercher_commande()
     case ATTENDRE_PROCHAINE_COMMANDE: {
       // g_commande = liste_Commandes.front();
       // liste_Commandes.pop();
-      g_commande.NumTable = 1;
-      g_commande.NumPlat = 4;
+      g_commande.NumTable = 1; // TEMP
+      g_commande.NumPlat = 2;
 
       g_colonne_cible = g_commande.NumPlat + (g_commande.NumPlat > 2); // Pour les plats 3&4, leur colonne et 4&5 donc on l'incrémente
 
@@ -35,7 +35,7 @@ void chercher_commande()
     }
 
     case SUIVRE_LIGNE_VERS_COLONNE_CUISINE: {
-      if (suivreLigne())
+      if (suivreLigne(VITESSE_MAX))
         g_colonne_actuelle += (g_cote_cuisine == LEFT) ? -1 : 1;
 
       if (g_colonne_actuelle == g_colonne_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
@@ -56,7 +56,7 @@ void chercher_commande()
     }
 
     case SUIVRE_LIGNE_VERS_TABLE_CUISINE: {
-      if (suivreLigne())
+      if (suivreLigne(VITESSE_MAX))
         g_rangee_actuelle--;
 
       if (g_rangee_actuelle == g_rangee_cible) {
@@ -67,8 +67,8 @@ void chercher_commande()
       break;
     }
 
-    case SUIVRE_LIGNE_JUSQUA_BRAS_SOUS_PLATEAU: {
-      if (suivreLigne())
+    case SUIVRE_LIGNE_JUSQUA_BRAS_SOUS_PLATEAU_CUISINE: {
+      if (suivreLigne(VITESSE_MAX))
         g_rangee_actuelle--;
 
       if (g_rangee_actuelle == g_rangee_cible) {
@@ -85,6 +85,9 @@ void livraison()
 {
   switch (g_etat) {
     case INITIER_DEPART_COMMANDE: {
+      g_commande.NumTable = 4; // TEMP
+      g_commande.NumPlat = 2;
+
       Serial.println("INITIER_COMMANDE");
       chercher_commande();
       g_rangee_cible = round(g_commande.NumTable/2.0);
@@ -96,9 +99,12 @@ void livraison()
     }
 
     case SUIVRE_LIGNE_VERS_RANGEE: {
-      suivreLigne();
+      if (suivreLigne(VITESSE_MAX))
+        g_rangee_actuelle++;
+
       if (g_rangee_actuelle == g_rangee_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
         commencerTourner(g_cote_client, 90);
+        Serial.println("TOURNER_VERS_TABLE_CLIENT");
         g_etat = TOURNER_VERS_TABLE_CLIENT;
       }
       break;
@@ -106,6 +112,7 @@ void livraison()
 
     case TOURNER_VERS_TABLE_CLIENT: {
       if (finiTourner()) {
+        g_colonne_cible = (g_cote_client == LEFT) ? 2 : 4;
         Serial.println("SUIVRE_LIGNE_VERS_TABLE");
         g_etat = SUIVRE_LIGNE_VERS_TABLE;
       }
@@ -113,10 +120,25 @@ void livraison()
     }
 
     case SUIVRE_LIGNE_VERS_TABLE: {
-      suivreLigne();
-      if (g_devant_table) {
-        Serial.println("ATTENDRE_PROCHAINE_COMMANDE");
-        g_etat = ATTENDRE_PROCHAINE_COMMANDE;
+      if (suivreLigne(VITESSE_MAX))
+        g_colonne_actuelle += (g_cote_client == LEFT) ? -1 : 1;
+
+      if (g_colonne_actuelle == g_colonne_cible) {
+        arret();
+        Serial.println("PRET_LEVER_PLATEAU");
+        g_etat = PRET_LEVER_PLATEAU;
+      }
+      break;
+    }
+
+    case SUIVRE_LIGNE_JUSQUA_BRAS_SUR_TABLE_CLIENT: {
+      if (suivreLigne(VITESSE_MAX))
+        g_colonne_actuelle += (g_cote_client == LEFT) ? -2 : 2;
+
+      if (g_colonne_actuelle == g_colonne_cible) {
+        arret();
+        Serial.println("PRET_DEPOSER_PLATEAU");
+        g_etat = PRET_DEPOSER_PLATEAU;
       }
       break;
     }
@@ -134,8 +156,8 @@ void retourBase() {
     }
 
     case SUIVRE_LIGNE_VERS_LIGNE_CENTRALE: {
-      suivreLigne();
-      if (!g_devant_table) {
+      suivreLigne(VITESSE_MAX);
+      if (1/**/) { // TODO
         commencerTourner(!g_cote_client, 90);
         Serial.println("TOURNER_VERS_CUISINE");
         g_etat = TOURNER_VERS_CUISINE;
@@ -153,7 +175,7 @@ void retourBase() {
     }
 
     case SUIVRE_LIGNE_VERS_CUISINE: {
-      if (suivreLigne())
+      if (suivreLigne(VITESSE_MAX))
         g_rangee_actuelle--;
 
       if (g_rangee_actuelle == g_rangee_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
