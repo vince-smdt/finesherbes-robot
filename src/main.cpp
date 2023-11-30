@@ -10,6 +10,7 @@
 #include "DetectMicroSonore.h"
 #include "Commande.h"
 #include "Lumieres.h"
+#include "LCD.h"
 
 void setup()
 {
@@ -18,13 +19,14 @@ void setup()
   calibrationSuiveurLigne();
   // BLESetup();
   // setup_plateau();
-  // MicroSonoreSetup();
+  LCD_setup();
   LumieresSetup();
 }
 
 void loop()
 {
   LumieresLoop();
+  LCD_Tout();
   // livraison();
 
   // if(MicroSonoreRobot() <= 3){
@@ -44,7 +46,7 @@ void loop()
       break;
     }
 
-    // Lever le plateau
+    // Deposer le plateau
     case PRET_DEPOSER_PLATEAU:
     case DEPOSER_PLATEAU:
     case FINI_DEPOSER_PLATEAU: {
@@ -52,7 +54,7 @@ void loop()
       break;
     }
 
-    // Deposer le plateau
+    // Lever le plateau
     case PRET_LEVER_PLATEAU:
     case LEVER_PLATEAU:
     case FINI_LEVER_PLATEAU: {
@@ -69,9 +71,10 @@ void loop()
     case RECULER_DANS_CUISINE:
     case TOURNER_VERS_SORTIE_CUISINE:
     case SUIVRE_LIGNE_VERS_SORTIE_CUISINE:
-    case TOURNER_VERS_COLONNE_PRINCIPALE:
-    case SUIVRE_LIGNE_VERS_COLONNE_CENTRE_CUISINE:
-    case SUIVRE_LIGNE_JUSQUA_BRAS_SOUS_PLATEAU_CUISINE: {
+    case TOURNER_VERS_COLONNE_PRINCIPALE_CUISINE:
+    case SUIVRE_LIGNE_VERS_COLONNE_CENTRE:
+    case SUIVRE_LIGNE_JUSQUA_BRAS_SOUS_PLATEAU_CUISINE:
+    case TOURNER_VERS_TABLES_CLIENT: {
       chercher_commande();
       break;
     }
