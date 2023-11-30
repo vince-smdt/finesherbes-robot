@@ -2,15 +2,13 @@
 #define BLE_H
 
 #include <Arduino.h>
-#include <Queue.h>
+#include "Globales.h"
 #include "Types.h"
 #include "Globales.h"
 #include <SoftwareSerial.h>
 
 const byte numChars = 4;
 int receivedChars[numChars];
-
-Queue<Commande> liste_Commandes;
 
 bool newData = false;
 
@@ -55,7 +53,7 @@ void printNewData(){
 
       nouvelle_Commande->NumTable = receivedChars[0];
       nouvelle_Commande->NumPlat = receivedChars[1];
-      liste_Commandes.push(nouvelle_Commande);
+      g_file_commandes.push(nouvelle_Commande);
     }
     newData = false;
   }
