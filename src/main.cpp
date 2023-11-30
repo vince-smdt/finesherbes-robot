@@ -10,6 +10,7 @@
 #include "DetectMicroSonore.h"
 #include "Commande.h"
 #include "Lumieres.h"
+#include "LCD.h"
 
 void setup()
 {
@@ -44,13 +45,14 @@ void setup()
   calibrationSuiveurLigne();
   // BLESetup();
   // setup_plateau();
-  // MicroSonoreSetup();
+  LCD_setup();
   LumieresSetup();
 }
 
 void loop()
 {
   LumieresLoop();
+  LCD_Tout();
   // livraison();
 
   // if(MicroSonoreRobot() <= 3){
@@ -70,7 +72,7 @@ void loop()
       break;
     }
 
-    // Lever le plateau
+    // Deposer le plateau
     case PRET_DEPOSER_PLATEAU:
     case DEPOSER_PLATEAU:
     case FINI_DEPOSER_PLATEAU: {
@@ -78,7 +80,7 @@ void loop()
       break;
     }
 
-    // Deposer le plateau
+    // Lever le plateau
     case PRET_LEVER_PLATEAU:
     case LEVER_PLATEAU:
     case FINI_LEVER_PLATEAU: {
