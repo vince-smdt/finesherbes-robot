@@ -5,7 +5,7 @@
 #include "General.h"
 #include "Globales.h"
 
-LiquidCrystal lcd(8, 9, 10, 11, 12, 13);
+LiquidCrystal lcd(14, 15, 16, 17, 18, 19);
 unsigned long time_now = 0;
 const int lcd_period = 500;
 void LCD_Robot_en_service();
@@ -64,12 +64,14 @@ void LCD_Robot_en_service(){
 
   if(millis() >= time_now + lcd_period){
     time_now+=lcd_period;
+   // lcd.clear();
     lcd.setCursor(0,0);
-    //lcd.clear();
-    lcd.print("Service en cours");
-    lcd.setCursor(0,1);
     lcd.print("    Table  ");
     lcd.print(g_commande->NumTable);
+   // lcd.setCursor(0,1);
+   // lcd.print("Service en cours");
+
+
   }
 }
 void LCD_Robot_au_repos(){
@@ -81,8 +83,10 @@ void LCD_Robot_au_repos(){
     lcd.setCursor(0,0);
     //lcd.clear();
     lcd.print("  Fines Herbes");
+    //Serial.print("Fonctionne");
     lcd.setCursor(0,1);
     lcd.print("   Bienvenue!");
+
   }
 }
 
