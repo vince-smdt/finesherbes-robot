@@ -5,7 +5,7 @@
 #include "General.h"
 #include "Globales.h"
 
-LiquidCrystal lcd(14, 15, 18, 19, 12, 13);
+LiquidCrystal lcd(8, 9, 10, 11, 12, 13);
 unsigned long time_now = 0;
 const int lcd_period = 500;
 void LCD_Robot_en_service();
@@ -51,6 +51,7 @@ void LCD_Tout(){
     case SUIVRE_LIGNE_VERS_LIGNE_CENTRALE:
     case TOURNER_VERS_CUISINE:
     case SUIVRE_LIGNE_VERS_CUISINE: {
+      
       LCD_Robot_au_repos();
       break;
     }
