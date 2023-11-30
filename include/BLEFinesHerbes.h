@@ -4,21 +4,25 @@
 #include <Arduino.h>
 #include <Queue.h>
 #include "Types.h"
+#include <SoftwareSerial.h>
 
-const byte numChars = 32;
-char receivedChars[numChars];
+const byte numChars = 4;
+int receivedChars[numChars];
 
 Queue<Commande> liste_Commandes;
 
 bool newData = false;
 
+void recvData();
+void printNewData();
+
 void BLESetup() {
-  Serial.println("<Arduino ready>");
+  Serial2.begin(9600);
 }
 
 void HandleData(){
-  // recvData();
-  // printNewData();
+  recvData();
+  printNewData();
 }
 
 void recvData(){
@@ -26,11 +30,10 @@ void recvData(){
   char endMarker = '\n';
   char rc;
 
-  while (Serial.available() > 0 && newData == false){
-    rc = Serial.read();
-
+  while (Serial2.available() > 0 && newData == false){
+    rc = Serial2.read();
     if (rc != endMarker){
-      receivedChars[ndx] = rc+48;
+      receivedChars[ndx] = rc - 48;
       ndx++;
       if(ndx >= numChars){
         ndx = numChars - 1;
@@ -46,12 +49,15 @@ void recvData(){
 
 void printNewData(){
   if (newData == true) {
-    Serial.print("Received: ");
-    if(sizeof(receivedChars)/sizeof(receivedChars[0]) == 3){
+
+    
+    if(receivedChars[0] >= 1 && receivedChars[0] <= 6 && receivedChars[1] >= 1 && receivedChars[1] <= 6){
       Commande nouvelle_Commande;
 
       nouvelle_Commande.NumTable = receivedChars[0];
+      Serial.println(nouvelle_Commande.NumTable);
       nouvelle_Commande.NumPlat = receivedChars[1];
+      Serial.println(nouvelle_Commande.NumPlat);
       liste_Commandes.push(nouvelle_Commande);
     }
     newData = false;
