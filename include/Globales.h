@@ -6,11 +6,14 @@
 #include "Constantes.h"
 #include "Enums.h"
 #include "Types.h"
+#include <SoftwareSerial.h>
 
 uint8_t g_etat = DEPART;
 uint8_t g_action = CHERCHER_COMMANDE;
 
 // Bluetooth
+SoftwareSerial SerialBluetooth(46, 47);
+// HardwareSerial& SerialBluetooth = Serial3;
 uint32_t g_debut_recv_data_ble = 0; // En ms, derniere fois que le robot a reçu des données BLE
 
 // Commandes

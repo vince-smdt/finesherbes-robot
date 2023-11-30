@@ -5,18 +5,16 @@
 #include "Globales.h"
 #include "Types.h"
 #include "Globales.h"
-#include <SoftwareSerial.h>
 
 const byte numChars = 4;
 int receivedChars[numChars];
-
 bool newData = false;
 
 void recvData();
 void printNewData();
 
 void BLESetup() {
-  Serial2.begin(9600);
+  SerialBluetooth.begin(9600);
 }
 
 void HandleData(){
@@ -29,8 +27,8 @@ void recvData(){
   char endMarker = '\n';
   char rc;
 
-  while (Serial2.available() > 0 && newData == false){
-    rc = Serial2.read();
+  while (SerialBluetooth.available() > 0 && newData == false){
+    rc = SerialBluetooth.read();
     if (rc != endMarker){
       receivedChars[ndx] = rc - 48;
       ndx++;
