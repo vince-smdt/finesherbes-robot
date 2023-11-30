@@ -47,7 +47,6 @@ void recvData(){
 
 void printNewData(){
   if (newData == true) {
-<<<<<<< HEAD
     Serial.print("Received: ");
     if(sizeof(receivedChars)/sizeof(receivedChars[0]) == 3){
       Commande* nouvelle_commande = new Commande();
@@ -55,18 +54,6 @@ void printNewData(){
       nouvelle_commande->NumTable = receivedChars[0];
       nouvelle_commande->NumPlat = receivedChars[1];
       g_file_commandes.push(nouvelle_commande);
-=======
-
-    
-    if(receivedChars[0] >= 1 && receivedChars[0] <= 6 && receivedChars[1] >= 1 && receivedChars[1] <= 6){
-      Commande nouvelle_Commande;
-
-      nouvelle_Commande.NumTable = receivedChars[0];
-      Serial.println(nouvelle_Commande.NumTable);
-      nouvelle_Commande.NumPlat = receivedChars[1];
-      Serial.println(nouvelle_Commande.NumPlat);
-      liste_Commandes.push(nouvelle_Commande);
->>>>>>> 84135449aa3305993d27843b1a09e50d5bcba4ed
     }
     newData = false;
   }
