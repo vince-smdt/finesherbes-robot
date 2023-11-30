@@ -13,9 +13,7 @@
 QTRSensorsAnalog qtra((unsigned char[]) {A7, A6, A5, A4, A3, A2, A1, A0}, NB_CAPTEURS_SUIVEUR_LIGNE, NB_LECTURES_SUIVEUR_LIGNE, SUIVEUR_LIGNE_EMITTER_PIN);
 unsigned int valeursCapteur[NB_CAPTEURS_SUIVEUR_LIGNE];
 
-// Propriété du PID
-const float kP = 0.0001;
-const float kD = 0.001;
+// Dernière erreur du suiveur de ligne
 float derniereErreur = 0;
 
 void calibrationSuiveurLigne();

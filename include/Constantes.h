@@ -6,6 +6,10 @@
 // Bluetooth
 const uint8_t DELAI_RECV_DATA_BLE = 100; // En ms, delai de temps avant de recevoir les prochaines données bluetooth
 
+// Propriété du PID
+const float kP = 0.0001;
+const float kD = 0.001;
+
 // Pathfinding
 const float VITESSE_MAX = 0.3;
 const float VITESSE_RECULONS = -0.3;
