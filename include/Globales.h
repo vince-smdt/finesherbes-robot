@@ -10,6 +10,9 @@
 uint8_t g_etat = DEPART;
 uint8_t g_action = CHERCHER_COMMANDE;
 
+// Bluetooth
+uint32_t g_debut_recv_data_ble = 0; // En ms, derniere fois que le robot a reçu des données BLE
+
 // Commandes
 Queue<Commande*> g_file_commandes;
 

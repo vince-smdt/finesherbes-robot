@@ -3,6 +3,9 @@
 
 #include <LibRobus.h>
 
+// Bluetooth
+const uint8_t DELAI_RECV_DATA_BLE = 100; // En ms, delai de temps avant de recevoir les prochaines données bluetooth
+
 // Pathfinding
 const float VITESSE_MAX = 0.3;
 const float VITESSE_RECULONS = -0.3;

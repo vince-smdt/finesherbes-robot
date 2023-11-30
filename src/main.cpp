@@ -48,7 +48,12 @@ void loop()
   // Serial.println("loop");
   LumieresLoop();
   //LCD_Tout();
-  HandleData();
+
+  // 
+  if (temps_ecoule(g_debut_recv_data_ble) > DELAI_RECV_DATA_BLE) {
+    g_debut_recv_data_ble = millis();
+    HandleData();
+  }
 
   // On execute la fonction voulue en fonction de l'etat actuel
   switch (g_etat) {
