@@ -57,7 +57,7 @@ bool suivreLigne(float p_vitesse)
   //lorsqu'au moins 6 capteurs détectent une ligne, cela veut dire qu'il a atteint une ligne perpendiculaire
   if (qtra.numSensorsHigh(valeursCapteur) > 4 && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE)
   {
-    debug_beep(1, 25);
+    // debug_beep(1, 25);
     g_debut_sortie_de_ligne = millis();
     ligneDetectee = true;
   }

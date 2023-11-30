@@ -1,7 +1,7 @@
 #ifndef BLE_H
 #define BLE_H
 
-#include <Arduino.h>
+#include <LibRobus.h>
 #include "Globales.h"
 #include "Types.h"
 #include <SoftwareSerial.h>
@@ -50,7 +50,9 @@ void printNewData(){
     Serial.print("Received: ");
     if(sizeof(receivedChars)/sizeof(receivedChars[0]) == 3){
       Commande* nouvelle_commande = new Commande();
-
+      Serial.print(receivedChars[0]);
+      Serial.print(" ");
+      Serial.println(receivedChars[1]);
       nouvelle_commande->NumTable = receivedChars[0];
       nouvelle_commande->NumPlat = receivedChars[1];
       g_file_commandes.push(nouvelle_commande);

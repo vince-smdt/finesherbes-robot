@@ -101,9 +101,13 @@ void Queue<T>::pop() {
 
 template <class T>
 void Queue<T>::do_unchecked_pop() {
-    Node* tmp = first->next;
+    if (first == last) {
+        last = first->next;
+    }
+
+    Node* tmp = first;
+    first = first->next;
     delete tmp;
-    first = tmp;
 }
 
 

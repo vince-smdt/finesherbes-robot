@@ -12,15 +12,8 @@ const uint8_t ANGLE_SERVO_LEVER = 180;
 const uint16_t DELAI_SERVO_BRAS = 1500;
 const uint16_t DELAI_DEPOSER_PLATEAU = 5;
 
-void setup_plateau();
 void lever_plateau();
 void deposer_plateau();
-
-void setup_plateau()
-{
-  SERVO_Enable(SERVO_BRAS_ID);
-  deposer_plateau();
-}
 
 void lever_plateau()
 {

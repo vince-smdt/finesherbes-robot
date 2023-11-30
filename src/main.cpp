@@ -9,60 +9,42 @@
 #include "SuiveurLigne.h"
 #include "DetectMicroSonore.h"
 #include "Commande.h"
-#include "Lumieres.h"
-#include "LCD.h"
+#include "BLEFinesHerbes.h"
+//#include "Lumieres.h"
+//#include "LCD.h"
 
 void setup()
 {
   BoardInit();
   Serial.begin(9600);
-
-  Commande* test_commande = new Commande();
-  test_commande->NumPlat = 4;
-  test_commande->NumTable = 5;
-  g_file_commandes.push(test_commande);
-
-  test_commande = new Commande();
-  test_commande->NumPlat = 2;
-  test_commande->NumTable = 4;
-  g_file_commandes.push(test_commande);
-
-  test_commande = new Commande();
-  test_commande->NumPlat = 1;
-  test_commande->NumTable = 2;
-  g_file_commandes.push(test_commande);
-
-  Serial.println("");
-
-  while (g_file_commandes.size() > 0) {
-    Commande* bruh = g_file_commandes.front();
-    Serial.print(bruh->NumPlat);
-    Serial.print(", ");
-    Serial.println(bruh->NumTable);
-    g_file_commandes.pop();
-  }
-
   calibrationSuiveurLigne();
-  // BLESetup();
-  // setup_plateau();
-  LCD_setup();
-  LumieresSetup();
+  BLESetup();
+  //LCD_setup();
+  //LumieresSetup();
+
+  // Commande* c = new Commande();
+  // c->NumPlat = 1;
+  // c->NumTable = 3;
+  // g_file_commandes.push(c);
+
+  // c = new Commande();
+  // c->NumPlat = 2;
+  // c->NumTable = 6;
+  // g_file_commandes.push(c);
+
+  // c = new Commande();
+  // c->NumPlat = 4;
+  // c->NumTable = 4;
+  // g_file_commandes.push(c);
 }
 
 void loop()
 {
-  LumieresLoop();
-  LCD_Tout();
-  // livraison();
-
-  // if(MicroSonoreRobot() <= 3){
-  //   avancer(0,0);
-  // }
-  // else{
-  //   avancer(0.1, 0.1);
-  // }
-
-  // Serial.println("VERIF NON-BLOQUANT"); // Pour s'assurer qu'aucune fonction n'est bloquante
+  // Serial.println("loop");
+  delay(25);
+  //LumieresLoop();
+  //LCD_Tout();
+  HandleData();
 
   // On execute la fonction voulue en fonction de l'etat actuel
   switch (g_etat) {

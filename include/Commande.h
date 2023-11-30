@@ -20,19 +20,14 @@ void chercher_commande()
         g_commande = g_file_commandes.front();
         g_file_commandes.pop();
 
-        Serial.print("plat: ");
-        Serial.print(g_commande->NumPlat);
-        Serial.print(", table: ");
-        Serial.println(g_commande->NumTable);
-
         g_colonne_cible = g_commande->NumPlat + (g_commande->NumPlat > 2); // Pour les plats 3&4, leur colonne et 4&5 donc on l'incrémente
         g_cote_cuisine = (g_commande->NumPlat < 3) ? RIGHT : LEFT;
 
         commencerTourner(g_cote_cuisine, 90);
         Serial.println("TOURNER_VERS_COTE_TABLE_CUISINE");
         g_etat = TOURNER_VERS_COTE_TABLE_CUISINE;
-        break;
       }
+      break;
     }
 
     case TOURNER_VERS_COTE_TABLE_CUISINE: {
@@ -170,11 +165,6 @@ void livraison()
       g_rangee_cible = round(g_commande->NumTable/2.0);
       g_cote_client = g_commande->NumTable%2;
 
-      Serial.print("rangee cible: ");
-      Serial.print(g_rangee_cible);
-      Serial.print(", rangee actuelle: ");
-      Serial.println(g_rangee_actuelle);
-
       Serial.println("SUIVRE_LIGNE_VERS_RANGEE");
       g_etat = SUIVRE_LIGNE_VERS_RANGEE;
       break;
@@ -223,7 +213,6 @@ void livraison()
         g_etat = PRET_DEPOSER_PLATEAU;
       }
       break;
-      
     }
   }
 }
