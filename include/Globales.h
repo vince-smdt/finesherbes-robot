@@ -2,12 +2,16 @@
 #define GLOBALES_H
 
 #include <LibRobus.h>
+#include <Queue.h>
 #include "Constantes.h"
 #include "Enums.h"
 #include "Types.h"
 
 uint8_t g_etat = DEPART;
 uint8_t g_action = CHERCHER_COMMANDE;
+
+// Commandes
+Queue<Commande*> g_file_commandes;
 
 // Bras
 uint32_t g_debut_mouvement_bras = 0; // En ms, moment quand le mouvement à commencé
@@ -22,6 +26,6 @@ int8_t g_rangee_cible = 0; // Les rangées peuvent être négatives, rangée 0 r
 int8_t g_colonne_cible = 3;
 int8_t g_rangee_actuelle = 1;
 int8_t g_colonne_actuelle = 3;
-Commande g_commande = {0};
+Commande* g_commande = nullptr;
 
 #endif // GLOBALES_H

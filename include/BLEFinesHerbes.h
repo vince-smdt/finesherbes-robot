@@ -2,13 +2,11 @@
 #define BLE_H
 
 #include <Arduino.h>
-#include <Queue.h>
+#include "Globales.h"
 #include "Types.h"
 
 const byte numChars = 32;
 char receivedChars[numChars];
-
-Queue<Commande> liste_Commandes;
 
 bool newData = false;
 
@@ -48,11 +46,11 @@ void printNewData(){
   if (newData == true) {
     Serial.print("Received: ");
     if(sizeof(receivedChars)/sizeof(receivedChars[0]) == 3){
-      Commande nouvelle_Commande;
+      Commande* nouvelle_commande = new Commande();
 
-      nouvelle_Commande.NumTable = receivedChars[0];
-      nouvelle_Commande.NumPlat = receivedChars[1];
-      liste_Commandes.push(nouvelle_Commande);
+      nouvelle_commande->NumTable = receivedChars[0];
+      nouvelle_commande->NumPlat = receivedChars[1];
+      g_file_commandes.push(nouvelle_commande);
     }
     newData = false;
   }

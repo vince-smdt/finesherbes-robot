@@ -15,6 +15,32 @@ void setup()
 {
   BoardInit();
   Serial.begin(9600);
+
+  Commande* test_commande = new Commande();
+  test_commande->NumPlat = 4;
+  test_commande->NumTable = 5;
+  g_file_commandes.push(test_commande);
+
+  test_commande = new Commande();
+  test_commande->NumPlat = 2;
+  test_commande->NumTable = 4;
+  g_file_commandes.push(test_commande);
+
+  test_commande = new Commande();
+  test_commande->NumPlat = 1;
+  test_commande->NumTable = 2;
+  g_file_commandes.push(test_commande);
+
+  Serial.println("");
+
+  while (g_file_commandes.size() > 0) {
+    Commande* bruh = g_file_commandes.front();
+    Serial.print(bruh->NumPlat);
+    Serial.print(", ");
+    Serial.println(bruh->NumTable);
+    g_file_commandes.pop();
+  }
+
   calibrationSuiveurLigne();
   // BLESetup();
   // setup_plateau();
@@ -70,7 +96,7 @@ void loop()
     case TOURNER_VERS_SORTIE_CUISINE:
     case SUIVRE_LIGNE_VERS_SORTIE_CUISINE:
     case TOURNER_VERS_COLONNE_PRINCIPALE_CUISINE:
-    case SUIVRE_LIGNE_VERS_COLONNE_CENTRE:
+    case SUIVRE_LIGNE_VERS_COLONNE_CENTRE_DEPUIS_CUISINE:
     case SUIVRE_LIGNE_JUSQUA_BRAS_SOUS_PLATEAU_CUISINE:
     case TOURNER_VERS_TABLES_CLIENT: {
       chercher_commande();
