@@ -5,7 +5,7 @@
 #include "General.h"
 #include "Globales.h"
 
-LiquidCrystal lcd(14, 15, 16, 17, 18, 19);
+LiquidCrystal lcd(14, 15, 16, 17, 47, 46);
 unsigned long time_now = 0;
 const int lcd_period = 500;
 void LCD_Robot_en_service();
@@ -83,7 +83,7 @@ void LCD_Robot_au_repos(){
     lcd.setCursor(0,0);
     //lcd.clear();
     lcd.print("  Fines Herbes");
-    //Serial.print("Fonctionne");
+    //SerialPrint.print("Fonctionne");
     lcd.setCursor(0,1);
     lcd.print("   Bienvenue!");
 

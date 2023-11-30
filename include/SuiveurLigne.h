@@ -32,16 +32,16 @@ void calibrationSuiveurLigne()
   // print the calibration minimum values measured when emitters were on
   for (int i = 0; i < NB_CAPTEURS_SUIVEUR_LIGNE; i++)
   {
-    Serial.print(qtra.calibratedMinimumOn[i]);
-    Serial.print(' ');
+    SerialPrint.print(qtra.calibratedMinimumOn[i]);
+    SerialPrint.print(' ');
   }
-  Serial.println();
+  SerialPrint.println();
   
   // print the calibration maximum values measured when emitters were on
   for (int i = 0; i < NB_CAPTEURS_SUIVEUR_LIGNE; i++)
   {
-    Serial.print(qtra.calibratedMaximumOn[i]);
-    Serial.print(' ');
+    SerialPrint.print(qtra.calibratedMaximumOn[i]);
+    SerialPrint.print(' ');
   }
 }
 

@@ -11,45 +11,25 @@
 #include "Commande.h"
 #include "BLEFinesHerbes.h"
 #include "Lumieres.h"
-//#include "LCD.h"
+#include "LCD.h"
 
 void setup()
 {
   BoardInit();
-  Serial.begin(9600);
+  SerialPrint.begin(9600);
   calibrationSuiveurLigne();
   BLESetup();
-  //LCD_setup();
+  LCD_setup();
   LumieresSetup();
-
-  Commande* c = new Commande();
-  c->NumPlat = 4;
-  c->NumTable = 2;
-  g_file_commandes.push(c);
-
-  c = new Commande();
-  c->NumPlat = 2;
-  c->NumTable = 4;
-  g_file_commandes.push(c);
-
-  c = new Commande();
-  c->NumPlat = 3;
-  c->NumTable = 6;
-  g_file_commandes.push(c);
-
-  c = new Commande();
-  c->NumPlat = 1;
-  c->NumTable = 5;
-  g_file_commandes.push(c);
 }
 
 void loop()
 {
-  // Serial.println("loop");
+  // SerialPrint.println("loop");
   LumieresLoop();
-  //LCD_Tout();
+  LCD_Tout();
 
-  // 
+  
   if (temps_ecoule(g_debut_recv_data_ble) > DELAI_RECV_DATA_BLE) {
     g_debut_recv_data_ble = millis();
     HandleData();
@@ -59,12 +39,12 @@ void loop()
   switch (g_etat) {
     // Etats initiaux
     case DEPART: {
-      Serial.println("");
-      Serial.println("=========================");
-      Serial.println("==        DEPART       ==");
-      Serial.println("=========================");
-      Serial.println("SUIVRE_LIGNE_VERS_CUISINE");
-      Serial.println("");
+      SerialPrint.println("");
+      SerialPrint.println("=========================");
+      SerialPrint.println("==        DEPART       ==");
+      SerialPrint.println("=========================");
+      SerialPrint.println("SUIVRE_LIGNE_VERS_CUISINE");
+      SerialPrint.println("");
       g_etat = SUIVRE_LIGNE_VERS_CUISINE;
       break;
     }

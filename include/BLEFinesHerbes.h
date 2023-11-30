@@ -14,6 +14,8 @@ void recvData();
 void printNewData();
 
 void BLESetup() {
+  pinMode(BLE_RX_PIN, INPUT);
+  pinMode(BLE_TX_PIN, OUTPUT);
   SerialBluetooth.begin(9600);
 }
 
@@ -27,6 +29,7 @@ void recvData(){
   char endMarker = '\n';
   char rc;
 
+  SerialPrint.println(SerialBluetooth.available());
   while (SerialBluetooth.available() > 0 && newData == false){
     rc = SerialBluetooth.read();
     if (rc != endMarker){
@@ -49,10 +52,10 @@ void printNewData(){
     if(receivedChars[0] >= 1 && receivedChars[0] <= 6 && receivedChars[1] >= 1 && receivedChars[1] <= 6){
       Commande* nouvelle_Commande = new Commande();
 
-      Serial.print("Received: ");
-      Serial.print(receivedChars[0]);
-      Serial.print(" ");
-      Serial.println(receivedChars[1]);
+      SerialPrint.print("Received: ");
+      SerialPrint.print(receivedChars[0]);
+      SerialPrint.print(" ");
+      SerialPrint.println(receivedChars[1]);
 
       nouvelle_Commande->NumTable = receivedChars[0];
       nouvelle_Commande->NumPlat = receivedChars[1];

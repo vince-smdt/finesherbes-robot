@@ -7,7 +7,7 @@
 #include "Enums.h"
 
 const uint8_t SERVO_BRAS_ID = 0;
-const uint8_t ANGLE_SERVO_DEPOSER = 90;
+const uint8_t ANGLE_SERVO_DEPOSER = 85;
 const uint8_t ANGLE_SERVO_LEVER = 180;
 const uint16_t DELAI_SERVO_BRAS = 1500;
 const uint16_t DELAI_DEPOSER_PLATEAU = 5;
@@ -42,11 +42,11 @@ void lever_plateau()
         g_etat = RECULER_DANS_CUISINE;
         g_rangee_cible = -1;
         g_colonne_cible = 3;
-        Serial.println("RECULER_DANS_CUISINE");
+        SerialPrint.println("RECULER_DANS_CUISINE");
       }
       else if (g_action == LIVRAISON) {
         g_colonne_cible = (g_cote_client == LEFT) ? 1 : 5;
-        Serial.println("SUIVRE_LIGNE_JUSQUA_BRAS_SUR_TABLE_CLIENT");
+        SerialPrint.println("SUIVRE_LIGNE_JUSQUA_BRAS_SUR_TABLE_CLIENT");
         g_etat = SUIVRE_LIGNE_JUSQUA_BRAS_SUR_TABLE_CLIENT;
       }
       break; 

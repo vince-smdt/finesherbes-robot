@@ -21,6 +21,8 @@ const uint8_t NB_LECTURES_SUIVEUR_LIGNE = 4; //Calcul la moyenne de 4 lectures d
 // Pins
 const uint8_t SUIVEUR_LIGNE_EMITTER_PIN = QTR_NO_EMITTER_PIN; //Pas d'emetteur
 const uint8_t SUIVEUR_LIGNE_LUMIERE_PIN = 13;
+const uint8_t BLE_RX_PIN = 47;
+const uint8_t BLE_TX_PIN = 48;
 
 // Limites
 const uint8_t TABLE_MIN = 1;

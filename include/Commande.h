@@ -24,10 +24,10 @@ void chercher_commande()
         // On vérifie que la commande contient des valeurs valides
         if (g_commande->NumPlat < PLAT_MIN || g_commande->NumPlat > PLAT_MAX
             || g_commande->NumTable < TABLE_MIN || g_commande->NumTable > TABLE_MAX) {
-              Serial.print("VALEURS DE COMMANDE INVALIDE: Plat - ");
-              Serial.print(g_commande->NumPlat);
-              Serial.print(", Table - ");
-              Serial.println(g_commande->NumTable);
+              SerialPrint.print("VALEURS DE COMMANDE INVALIDE: Plat - ");
+              SerialPrint.print(g_commande->NumPlat);
+              SerialPrint.print(", Table - ");
+              SerialPrint.println(g_commande->NumTable);
 
               debug_beep(3, 1000);
               break;
@@ -37,7 +37,7 @@ void chercher_commande()
         g_cote_cuisine = (g_commande->NumPlat < 3) ? RIGHT : LEFT;
 
         commencerTourner(g_cote_cuisine, 90);
-        Serial.println("TOURNER_VERS_COTE_TABLE_CUISINE");
+        SerialPrint.println("TOURNER_VERS_COTE_TABLE_CUISINE");
         g_etat = TOURNER_VERS_COTE_TABLE_CUISINE;
       }
       break;
@@ -45,7 +45,7 @@ void chercher_commande()
 
     case TOURNER_VERS_COTE_TABLE_CUISINE: {
       if (finiTourner()) {
-        Serial.println("SUIVRE_LIGNE_VERS_COLONNE_CUISINE");
+        SerialPrint.println("SUIVRE_LIGNE_VERS_COLONNE_CUISINE");
         g_etat = SUIVRE_LIGNE_VERS_COLONNE_CUISINE;
       }
       break;
@@ -54,12 +54,12 @@ void chercher_commande()
     case SUIVRE_LIGNE_VERS_COLONNE_CUISINE: {
       if (suivreLigne(VITESSE_MAX)) {
         g_colonne_actuelle += (g_cote_cuisine == LEFT) ? 1 : -1;
-        Serial.println(g_colonne_actuelle);
+        SerialPrint.println(g_colonne_actuelle);
       }
 
       if (g_colonne_actuelle == g_colonne_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
         commencerTourner(!g_cote_cuisine, 90);
-        Serial.println("TOURNER_VERS_TABLE_CUISINE");
+        SerialPrint.println("TOURNER_VERS_TABLE_CUISINE");
         g_etat = TOURNER_VERS_TABLE_CUISINE;
       }
       break;
@@ -67,7 +67,7 @@ void chercher_commande()
 
     case TOURNER_VERS_TABLE_CUISINE: {
       if (finiTourner()) {
-        Serial.println("SUIVRE_LIGNE_VERS_TABLE_CUISINE");
+        SerialPrint.println("SUIVRE_LIGNE_VERS_TABLE_CUISINE");
         g_etat = SUIVRE_LIGNE_VERS_TABLE_CUISINE;
         g_rangee_cible = -1;
       }
@@ -80,7 +80,7 @@ void chercher_commande()
 
       if (g_rangee_actuelle == g_rangee_cible) {
         arret();
-        Serial.println("PRET_DEPOSER_PLATEAU");
+        SerialPrint.println("PRET_DEPOSER_PLATEAU");
         g_etat = PRET_DEPOSER_PLATEAU;
       }
       break;
@@ -92,7 +92,7 @@ void chercher_commande()
 
       if (g_rangee_actuelle == g_rangee_cible) {
         arret();
-        Serial.println("PRET_LEVER_PLATEAU");
+        SerialPrint.println("PRET_LEVER_PLATEAU");
         g_etat = PRET_LEVER_PLATEAU;
       }
       break;
@@ -105,7 +105,7 @@ void chercher_commande()
         arret();
         g_rangee_actuelle++;
         commencerTourner(LEFT, 180);
-        Serial.println("TOURNER_VERS_SORTIE_CUISINE");
+        SerialPrint.println("TOURNER_VERS_SORTIE_CUISINE");
         g_etat = TOURNER_VERS_SORTIE_CUISINE;
       }
       break;
@@ -117,7 +117,7 @@ void chercher_commande()
         arret();
         g_action = LIVRAISON;
         g_rangee_cible = 0;
-        Serial.println("SUIVRE_LIGNE_VERS_SORTIE_CUISINE");
+        SerialPrint.println("SUIVRE_LIGNE_VERS_SORTIE_CUISINE");
         g_etat = SUIVRE_LIGNE_VERS_SORTIE_CUISINE;
       }
       break;
@@ -129,7 +129,7 @@ void chercher_commande()
       
       if (g_rangee_actuelle == g_rangee_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE)
       {
-        Serial.println("TOURNER_VERS_COLONNE_PRINCIPALE_CUISINE");
+        SerialPrint.println("TOURNER_VERS_COLONNE_PRINCIPALE_CUISINE");
         g_etat = TOURNER_VERS_COLONNE_PRINCIPALE_CUISINE;
         commencerTourner(g_cote_cuisine, 90);
       }
@@ -140,7 +140,7 @@ void chercher_commande()
       if (finiTourner())
       {
         g_colonne_cible = 3;
-        Serial.println("SUIVRE_LIGNE_VERS_COLONNE_CENTRE_DEPUIS_CUISINE");
+        SerialPrint.println("SUIVRE_LIGNE_VERS_COLONNE_CENTRE_DEPUIS_CUISINE");
         g_etat = SUIVRE_LIGNE_VERS_COLONNE_CENTRE_DEPUIS_CUISINE;
         arret();
       }
@@ -150,12 +150,12 @@ void chercher_commande()
     case SUIVRE_LIGNE_VERS_COLONNE_CENTRE_DEPUIS_CUISINE: {
       if (suivreLigne(VITESSE_MAX)) {
         g_colonne_actuelle += (g_cote_cuisine == LEFT) ? -1 : 1;
-        Serial.println(g_colonne_actuelle);
+        SerialPrint.println(g_colonne_actuelle);
       }
 
       if (g_colonne_actuelle == g_colonne_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
         commencerTourner(!g_cote_cuisine, 90);
-        Serial.println("TOURNER_VERS_TABLES_CLIENT");
+        SerialPrint.println("TOURNER_VERS_TABLES_CLIENT");
         g_etat = TOURNER_VERS_TABLES_CLIENT;
       }
       break;
@@ -163,7 +163,7 @@ void chercher_commande()
 
     case TOURNER_VERS_TABLES_CLIENT: {
       if (finiTourner()) {
-        Serial.println("INITIER_DEPART_LIVRAISON");
+        SerialPrint.println("INITIER_DEPART_LIVRAISON");
         g_etat = INITIER_DEPART_LIVRAISON;
       }
       break;
@@ -178,7 +178,7 @@ void livraison()
       g_rangee_cible = round(g_commande->NumTable/2.0);
       g_cote_client = g_commande->NumTable%2;
 
-      Serial.println("SUIVRE_LIGNE_VERS_RANGEE");
+      SerialPrint.println("SUIVRE_LIGNE_VERS_RANGEE");
       g_etat = SUIVRE_LIGNE_VERS_RANGEE;
       break;
     }
@@ -189,7 +189,7 @@ void livraison()
 
       if (g_rangee_actuelle == g_rangee_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
         commencerTourner(g_cote_client, 90);
-        Serial.println("TOURNER_VERS_TABLE_CLIENT");
+        SerialPrint.println("TOURNER_VERS_TABLE_CLIENT");
         g_etat = TOURNER_VERS_TABLE_CLIENT;
       }
       break;
@@ -198,7 +198,7 @@ void livraison()
     case TOURNER_VERS_TABLE_CLIENT: {
       if (finiTourner()) {
         g_colonne_cible = (g_cote_client == LEFT) ? 2 : 4;
-        Serial.println("SUIVRE_LIGNE_VERS_TABLE");
+        SerialPrint.println("SUIVRE_LIGNE_VERS_TABLE");
         g_etat = SUIVRE_LIGNE_VERS_TABLE;
       }
       break;
@@ -210,7 +210,7 @@ void livraison()
 
       if (g_colonne_actuelle == g_colonne_cible) {
         arret();
-        Serial.println("PRET_LEVER_PLATEAU");
+        SerialPrint.println("PRET_LEVER_PLATEAU");
         g_etat = PRET_LEVER_PLATEAU;
       }
       break;
@@ -222,7 +222,7 @@ void livraison()
 
       if (g_colonne_actuelle == g_colonne_cible) {
         arret();
-        Serial.println("PRET_DEPOSER_PLATEAU");
+        SerialPrint.println("PRET_DEPOSER_PLATEAU");
         g_etat = PRET_DEPOSER_PLATEAU;
       }
       break;
@@ -233,9 +233,9 @@ void livraison()
 void retourBase() {
   switch (g_etat) {
     case INITIER_RETOUR_BASE: {
-      Serial.println("INITIER_RETOUR_BASE");
+      SerialPrint.println("INITIER_RETOUR_BASE");
       g_debut_deplacement_hardcode = millis();
-      Serial.println("RECULER_VERS_LIGNE_CENTRALE");
+      SerialPrint.println("RECULER_VERS_LIGNE_CENTRALE");
       g_etat = RECULER_VERS_LIGNE_CENTRALE;
       break;
     }
@@ -244,7 +244,7 @@ void retourBase() {
       avancer(-0.1, -0.1);
 
       if (temps_ecoule(g_debut_deplacement_hardcode) > 1500) {
-        Serial.println("TOURNER_VERS_LIGNE_CENTRALE");
+        SerialPrint.println("TOURNER_VERS_LIGNE_CENTRALE");
         commencerTourner(RIGHT, 180);
         g_colonne_actuelle = (g_cote_client == LEFT) ? 2 : 4;
         g_etat = TOURNER_VERS_LIGNE_CENTRALE;
@@ -255,7 +255,7 @@ void retourBase() {
     case TOURNER_VERS_LIGNE_CENTRALE: {
       if (finiTourner()) {
         g_colonne_cible = 3;
-        Serial.println("SUIVRE_LIGNE_VERS_LIGNE_CENTRALE");
+        SerialPrint.println("SUIVRE_LIGNE_VERS_LIGNE_CENTRALE");
         g_etat = SUIVRE_LIGNE_VERS_LIGNE_CENTRALE;
       }
       break;
@@ -267,7 +267,7 @@ void retourBase() {
 
       if (g_colonne_actuelle == g_colonne_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
         commencerTourner(!g_cote_client, 90);
-        Serial.println("TOURNER_VERS_CUISINE");
+        SerialPrint.println("TOURNER_VERS_CUISINE");
         g_etat = TOURNER_VERS_CUISINE;
       }
       break;
@@ -276,7 +276,7 @@ void retourBase() {
     case TOURNER_VERS_CUISINE: {
       if (finiTourner()) {
         g_rangee_cible = 0;
-        Serial.println("SUIVRE_LIGNE_VERS_CUISINE");
+        SerialPrint.println("SUIVRE_LIGNE_VERS_CUISINE");
         g_etat = SUIVRE_LIGNE_VERS_CUISINE;
       }
       break;
@@ -287,7 +287,7 @@ void retourBase() {
         g_rangee_actuelle--;
 
       if (g_rangee_actuelle == g_rangee_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
-        Serial.println("ATTENDRE_PROCHAINE_COMMANDE");
+        SerialPrint.println("ATTENDRE_PROCHAINE_COMMANDE");
         g_etat = ATTENDRE_PROCHAINE_COMMANDE;
       }
       break;

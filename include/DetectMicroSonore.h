@@ -26,8 +26,8 @@ void MicroSonoreTest(){
   duration = pulseIn(echoPin, HIGH, 1000000UL);
   distanceMur = duration * 0.034 / 2;
 
-  Serial.print("Distance: ");
-  Serial.println(distanceMur);
+  SerialPrint.print("Distance: ");
+  SerialPrint.println(distanceMur);
 }
 
 int MicroSonoreRobot(){
@@ -45,7 +45,7 @@ int MicroSonoreRobot(){
   duration = pulseIn(echoPin, HIGH, 1000000UL);
   distanceMur = duration * 0.034 / 2;
 
-  Serial.println("Distance :" + String(distanceMur));
+  SerialPrint.println("Distance :" + String(distanceMur));
 
   return distanceMur;
 }
