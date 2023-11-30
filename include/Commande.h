@@ -15,10 +15,23 @@ void chercher_commande()
       arret();
 
       if (g_file_commandes.size() > 0) {
+        // On prend la prochaine commande
         if (g_commande)
           delete g_commande;
         g_commande = g_file_commandes.front();
         g_file_commandes.pop();
+
+        // On vérifie que la commande contient des valeurs valides
+        if (g_commande->NumPlat < PLAT_MIN || g_commande->NumPlat > PLAT_MAX
+            || g_commande->NumTable < TABLE_MIN || g_commande->NumTable > TABLE_MAX) {
+              Serial.print("VALEURS DE COMMANDE INVALIDE: Plat - ");
+              Serial.print(g_commande->NumPlat);
+              Serial.print(", Table - ");
+              Serial.println(g_commande->NumTable);
+
+              debug_beep(3, 1000);
+              break;
+         }
 
         g_colonne_cible = g_commande->NumPlat + (g_commande->NumPlat > 2); // Pour les plats 3&4, leur colonne et 4&5 donc on l'incrémente
         g_cote_cuisine = (g_commande->NumPlat < 3) ? RIGHT : LEFT;
@@ -114,7 +127,7 @@ void chercher_commande()
       if (suivreLigne(VITESSE_MAX))
         g_rangee_actuelle++;
       
-      if (g_rangee_actuelle == g_rangee_cible)
+      if (g_rangee_actuelle == g_rangee_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE)
       {
         Serial.println("TOURNER_VERS_COLONNE_PRINCIPALE_CUISINE");
         g_etat = TOURNER_VERS_COLONNE_PRINCIPALE_CUISINE;
@@ -241,8 +254,8 @@ void retourBase() {
 
     case TOURNER_VERS_LIGNE_CENTRALE: {
       if (finiTourner()) {
-        Serial.println("SUIVRE_LIGNE_VERS_TABLE");
         g_colonne_cible = 3;
+        Serial.println("SUIVRE_LIGNE_VERS_LIGNE_CENTRALE");
         g_etat = SUIVRE_LIGNE_VERS_LIGNE_CENTRALE;
       }
       break;
@@ -252,7 +265,7 @@ void retourBase() {
       if (suivreLigne(VITESSE_MAX))
         g_colonne_actuelle += (g_cote_client == LEFT) ? 1 : -1;
 
-      if (g_colonne_actuelle == g_colonne_cible) {
+      if (g_colonne_actuelle == g_colonne_cible && temps_ecoule(g_debut_sortie_de_ligne) > DELAI_SORTIE_DE_LIGNE) {
         commencerTourner(!g_cote_client, 90);
         Serial.println("TOURNER_VERS_CUISINE");
         g_etat = TOURNER_VERS_CUISINE;

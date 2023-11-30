@@ -15,4 +15,10 @@ const uint8_t NB_LECTURES_SUIVEUR_LIGNE = 4; //Calcul la moyenne de 4 lectures d
 const uint8_t SUIVEUR_LIGNE_EMITTER_PIN = QTR_NO_EMITTER_PIN; //Pas d'emetteur
 const uint8_t SUIVEUR_LIGNE_LUMIERE_PIN = 13;
 
+// Limites
+const uint8_t TABLE_MIN = 1;
+const uint8_t TABLE_MAX = 6;
+const uint8_t PLAT_MIN = 1;
+const uint8_t PLAT_MAX = 4;
+
 #endif // CONSTANTES_H

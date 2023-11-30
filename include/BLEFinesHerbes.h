@@ -4,6 +4,7 @@
 #include <LibRobus.h>
 #include "Globales.h"
 #include "Types.h"
+#include "Globales.h"
 #include <SoftwareSerial.h>
 
 const byte numChars = 4;
@@ -24,7 +25,7 @@ void HandleData(){
 }
 
 void recvData(){
-  static byte ndx = 0;
+  byte ndx = 0;
   char endMarker = '\n';
   char rc;
 
@@ -33,7 +34,7 @@ void recvData(){
     if (rc != endMarker){
       receivedChars[ndx] = rc - 48;
       ndx++;
-      if(ndx >= numChars){
+      if (ndx >= numChars){
         ndx = numChars - 1;
       }
     }
@@ -47,15 +48,17 @@ void recvData(){
 
 void printNewData(){
   if (newData == true) {
-    Serial.print("Received: ");
-    if(sizeof(receivedChars)/sizeof(receivedChars[0]) == 3){
-      Commande* nouvelle_commande = new Commande();
+    if(receivedChars[0] >= 1 && receivedChars[0] <= 6 && receivedChars[1] >= 1 && receivedChars[1] <= 6){
+      Commande* nouvelle_Commande = new Commande();
+
+      Serial.print("Received: ");
       Serial.print(receivedChars[0]);
       Serial.print(" ");
       Serial.println(receivedChars[1]);
-      nouvelle_commande->NumTable = receivedChars[0];
-      nouvelle_commande->NumPlat = receivedChars[1];
-      g_file_commandes.push(nouvelle_commande);
+
+      nouvelle_Commande->NumTable = receivedChars[0];
+      nouvelle_Commande->NumPlat = receivedChars[1];
+      g_file_commandes.push(nouvelle_Commande);
     }
     newData = false;
   }

@@ -10,7 +10,7 @@
 #include "DetectMicroSonore.h"
 #include "Commande.h"
 #include "BLEFinesHerbes.h"
-//#include "Lumieres.h"
+#include "Lumieres.h"
 //#include "LCD.h"
 
 void setup()
@@ -20,29 +20,33 @@ void setup()
   calibrationSuiveurLigne();
   BLESetup();
   //LCD_setup();
-  //LumieresSetup();
+  LumieresSetup();
 
-  // Commande* c = new Commande();
-  // c->NumPlat = 1;
-  // c->NumTable = 3;
-  // g_file_commandes.push(c);
+  Commande* c = new Commande();
+  c->NumPlat = 4;
+  c->NumTable = 2;
+  g_file_commandes.push(c);
 
-  // c = new Commande();
-  // c->NumPlat = 2;
-  // c->NumTable = 6;
-  // g_file_commandes.push(c);
+  c = new Commande();
+  c->NumPlat = 2;
+  c->NumTable = 4;
+  g_file_commandes.push(c);
 
-  // c = new Commande();
-  // c->NumPlat = 4;
-  // c->NumTable = 4;
-  // g_file_commandes.push(c);
+  c = new Commande();
+  c->NumPlat = 3;
+  c->NumTable = 6;
+  g_file_commandes.push(c);
+
+  c = new Commande();
+  c->NumPlat = 1;
+  c->NumTable = 5;
+  g_file_commandes.push(c);
 }
 
 void loop()
 {
   // Serial.println("loop");
-  delay(25);
-  //LumieresLoop();
+  LumieresLoop();
   //LCD_Tout();
   HandleData();
 
@@ -50,6 +54,12 @@ void loop()
   switch (g_etat) {
     // Etats initiaux
     case DEPART: {
+      Serial.println("");
+      Serial.println("=========================");
+      Serial.println("==        DEPART       ==");
+      Serial.println("=========================");
+      Serial.println("SUIVRE_LIGNE_VERS_CUISINE");
+      Serial.println("");
       g_etat = SUIVRE_LIGNE_VERS_CUISINE;
       break;
     }
