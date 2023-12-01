@@ -10,21 +10,19 @@ const byte numChars = 4;
 int receivedChars[numChars];
 bool newData = false;
 
-void recvData();
-void printNewData();
+void blerecvData();
+void saveNewData();
 
 void BLESetup() {
-  pinMode(BLE_RX_PIN, INPUT);
-  pinMode(BLE_TX_PIN, OUTPUT);
   SerialBluetooth.begin(9600);
 }
 
 void HandleData(){
-  recvData();
-  printNewData();
+  blerecvData();
+  saveNewData();
 }
 
-void recvData(){
+void blerecvData(){
   byte ndx = 0;
   char endMarker = '\n';
   char rc;
@@ -47,7 +45,7 @@ void recvData(){
   }
 }
 
-void printNewData(){
+void saveNewData(){
   if (newData == true) {
     if(receivedChars[0] >= 1 && receivedChars[0] <= 6 && receivedChars[1] >= 1 && receivedChars[1] <= 6){
       Commande* nouvelle_Commande = new Commande();

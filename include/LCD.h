@@ -5,7 +5,7 @@
 #include "General.h"
 #include "Globales.h"
 
-LiquidCrystal lcd(14, 15, 16, 17, 47, 46);
+LiquidCrystal lcd(100, 101, 102, 103, 104, 105);
 unsigned long time_now = 0;
 const int lcd_period = 500;
 void LCD_Robot_en_service();

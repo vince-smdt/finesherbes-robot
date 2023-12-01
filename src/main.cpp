@@ -11,7 +11,7 @@
 #include "Commande.h"
 #include "BLEFinesHerbes.h"
 #include "Lumieres.h"
-#include "LCD.h"
+//#include "LCD.h"
 
 void setup()
 {
@@ -19,17 +19,15 @@ void setup()
   SerialPrint.begin(9600);
   calibrationSuiveurLigne();
   BLESetup();
-  LCD_setup();
+  //LCD_setup();
   LumieresSetup();
 }
 
 void loop()
 {
-  // SerialPrint.println("loop");
   LumieresLoop();
-  LCD_Tout();
+  //LCD_Tout();
 
-  
   if (temps_ecoule(g_debut_recv_data_ble) > DELAI_RECV_DATA_BLE) {
     g_debut_recv_data_ble = millis();
     HandleData();
